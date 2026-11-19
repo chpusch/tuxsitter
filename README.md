@@ -15,6 +15,13 @@
 
 ---
 
+> [!IMPORTANT]
+> **Early version - testers wanted!**
+> Tuxsitter has so far only been roughly tested on the author's own Linux Mint laptop.
+> Thorough testing on many different setups is more than one person can cover - so please
+> **try it on your system and [report any problems](https://github.com/chpusch/tuxsitter/issues)**.
+> A short note that it *works* on your distribution/desktop is just as helpful. Thank you!
+
 Tuxsitter is a small, friendly babysitter for the family computer. It is made for
 **Linux Mint** (Cinnamon) and works on other Ubuntu/Debian based desktops.
 Parents get one simple window; the child sees how much time is left in the panel.
@@ -119,7 +126,7 @@ No parental control is perfect. Things to be aware of:
   VPNs not known to the filter provider). Talking about the rules helps more than any software.
 - The DNS filter blocks domains, not individual pages.
 - Time is counted per computer. Multiple computers each need Tuxsitter.
-- Built for Linux Mint 21/22 (Cinnamon). Other desktops should work; the panel icon needs
+- Roughly tested on Linux Mint (Cinnamon) only. Other desktops should work; the panel icon needs
   AppIndicator support (GNOME users need the *AppIndicator* extension).
 
 ## Uninstall

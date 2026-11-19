@@ -15,6 +15,13 @@
 
 ---
 
+> [!IMPORTANT]
+> **Frühe Version – Tester gesucht!**
+> Tuxsitter wurde bisher nur grob auf dem Linux-Mint-Laptop des Autors getestet.
+> Intensives Testen auf vielen verschiedenen Systemen kann eine einzelne Person nicht leisten –
+> deshalb: **Probier es gern auf deinem System aus und [melde Fehler](https://github.com/chpusch/tuxsitter/issues)**.
+> Auch eine kurze Rückmeldung, dass es auf deiner Distribution bzw. deinem Desktop *funktioniert*, hilft sehr. Danke!
+
 Tuxsitter ist ein kleiner, freundlicher Babysitter für den Familien-PC. Gemacht für **Linux Mint**
 (Cinnamon), läuft auch auf anderen Ubuntu-/Debian-basierten Desktops. Eltern bekommen ein
 einfaches Fenster, das Kind sieht im Panel, wie viel Zeit noch übrig ist.
