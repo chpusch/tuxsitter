@@ -582,7 +582,9 @@ class MainWindow(Gtk.ApplicationWindow):
         self.t_sub = label("", "dim-label", xalign=0.5)
         self.t_bar = Gtk.LevelBar(min_value=0, max_value=1)
         self.t_bar.set_size_request(-1, 10)
+        self.t_note = label("", xalign=0.5)
         b.pack_start(self.t_big, False, False, 6)
+        b.pack_start(self.t_note, False, False, 0)
         b.pack_start(self.t_sub, False, False, 0)
         b.pack_start(self.t_bar, False, False, 8)
 
@@ -624,6 +626,7 @@ class MainWindow(Gtk.ApplicationWindow):
             return
         if not st or not st.get("managed"):
             self.t_big.set_text("–")
+            self.t_note.set_text("")
             self.t_sub.set_text(_("Protection is paused.") if not self.cfg["children"][user].get("enabled", True)
                                 else _("No data from the service."))
             self.head_status.set_text("")
@@ -639,6 +642,13 @@ class MainWindow(Gtk.ApplicationWindow):
         else:
             big = _("{time} left").format(time=C.fmt_duration(rem))
         self.t_big.set_text(big)
+        if st.get("limited_by") == "window" and st.get("until"):
+            note = _("Allowed time ends at {time}.").format(time=st["until"])
+        elif st.get("limited_by") == "limit":
+            note = _("Daily limit - only counts while your child is logged in.")
+        else:
+            note = ""
+        self.t_note.set_text(note)
         if limit is not None:
             sub = _("Used today: {used} of {limit}").format(used=C.fmt_duration(used), limit=C.fmt_duration(limit))
         else:

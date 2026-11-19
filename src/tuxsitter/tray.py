@@ -257,7 +257,11 @@ class Tray:
         elif rem <= 0:
             short, longtxt = "0:00", reason_text(st.get("reason"), _("No time left"))
         else:
-            short, longtxt = C.fmt_duration(rem, short=True), _("{time} left today").format(time=C.fmt_duration(rem))
+            short = C.fmt_duration(rem, short=True)
+            if st.get("limited_by") == "window" and st.get("until"):
+                longtxt = _("{time} left today (until {until})").format(time=C.fmt_duration(rem), until=st["until"])
+            else:
+                longtxt = _("{time} left today").format(time=C.fmt_duration(rem))
         self.m_time.set_label(longtxt)
         win = st.get("window")
         self.m_window.set_label(_("Allowed from {start} to {end}").format(start=win[0], end=win[1]) if win else _("No time-of-day limit"))

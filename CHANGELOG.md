@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 - 2026-11-19
+
+- Clearer remaining time: the parent app and the panel now say when the remaining time is
+  limited by the end of the allowed hours ("Allowed time ends at 20:00") rather than by the
+  daily limit. Before, the countdown looked as if screen time was counted while logged out.
+
 ## 0.1.1 - 2026-11-19
 
 - Fix: the parent app could stop working while entering the first PIN (and in a few other

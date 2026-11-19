@@ -222,8 +222,19 @@ class Daemon:
             next_day = "tomorrow"
             next_time = trules["start"] if trules["window_enabled"] else "00:00"
 
+        # what is limiting today's remaining time: the daily limit or the end of the allowed hours?
+        limited_by, until = None, None
+        if reason is None and remaining < INF:
+            if window_left <= limit_left:
+                limited_by = "window"
+                until = time.strftime("%H:%M", time.localtime(now + window_left))
+            else:
+                limited_by = "limit"
+
         ending = self.ending.get(user)
         return {
+            "limited_by": limited_by,
+            "until": until,
             "managed": True,
             "user": user,
             "daytype": daytype,

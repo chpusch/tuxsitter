@@ -34,6 +34,9 @@ class StatusTests(unittest.TestCase):
         st = d.status("kid", now)
         self.assertEqual(st["daytype"], "school")
         self.assertEqual(st["remaining"], 30 * 60)          # 90 min limit - 60 used
+        self.assertEqual(st["limited_by"], "limit")
+        st = d.status("kid", at(19, 44))                     # 16 min before 20:00
+        self.assertEqual((st["remaining"], st["limited_by"], st["until"]), (16 * 60, "window", "20:00"))
         st = d.status("kid", at(21))
         self.assertEqual((st["remaining"], st["reason"]), (0, "window"))
         st = d.status("kid", at(6))
