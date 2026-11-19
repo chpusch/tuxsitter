@@ -1,0 +1,15 @@
+[Unit]
+Description=Tuxsitter parental controls (screen time and DNS filter)
+Documentation=https://github.com/chpusch/tuxsitter
+After=network.target systemd-logind.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -B /usr/lib/tuxsitter/daemon.py
+Restart=always
+RestartSec=3
+RuntimeDirectory=tuxsitter
+RuntimeDirectoryMode=0755
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+mkdir -p /etc/tuxsitter /var/lib/tuxsitter
+chmod 700 /etc/tuxsitter /var/lib/tuxsitter
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+  gtk-update-icon-cache -q -f /usr/share/icons/hicolor || true
+fi
+if [ -d /run/systemd/system ]; then
+  systemctl daemon-reload || true
+  systemctl enable tuxsitter.service >/dev/null 2>&1 || true
+  systemctl restart tuxsitter.service || true
+fi
+exit 0

@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Name=Tuxsitter
+GenericName=Parental Controls
+GenericName[de]=Kindersicherung
+GenericName[fr]=Contrôle parental
+GenericName[es]=Control parental
+Comment=Screen time, allowed hours and internet filter for children's accounts
+Comment[de]=Bildschirmzeit, Uhrzeiten und Internet-Filter für Kinderkonten
+Comment[fr]=Temps d'écran, horaires et filtre internet pour les comptes d'enfants
+Comment[es]=Tiempo de pantalla, horario y filtro de internet para cuentas infantiles
+Exec=tuxsitter
+Icon=tuxsitter
+Terminal=false
+Categories=Settings;System;Security;
+Keywords=parental;controls;screen time;kids;children;dns;filter;Kindersicherung;Jugendschutz;Bildschirmzeit;contrôle parental;control parental;

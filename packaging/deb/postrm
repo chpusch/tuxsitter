@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+rm -rf /usr/lib/tuxsitter/__pycache__
+if [ "$1" = "purge" ]; then
+  rm -rf /etc/tuxsitter /var/lib/tuxsitter
+fi
+if [ -d /run/systemd/system ]; then systemctl daemon-reload || true; fi
+exit 0

@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Name=Tuxsitter Indicator
+Name[de]=Tuxsitter Zeitanzeige
+Name[fr]=Indicateur Tuxsitter
+Name[es]=Indicador de Tuxsitter
+Comment=Shows the remaining screen time
+Comment[de]=Zeigt die verbleibende Bildschirmzeit an
+Comment[fr]=Affiche le temps d'écran restant
+Comment[es]=Muestra el tiempo de pantalla restante
+Exec=/usr/lib/tuxsitter/tray.py
+Icon=tuxsitter
+Terminal=false
+NoDisplay=true
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=3

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>Tuxsitter</vendor>
+  <vendor_url>https://github.com/chpusch/tuxsitter</vendor_url>
+  <action id="io.github.chpusch.tuxsitter.admin">
+    <description>Manage Tuxsitter parental controls</description>
+    <description xml:lang="de">Tuxsitter-Kindersicherung verwalten</description>
+    <description xml:lang="fr">Gérer le contrôle parental Tuxsitter</description>
+    <description xml:lang="es">Administrar el control parental Tuxsitter</description>
+    <message>Authentication is required to manage parental controls.</message>
+    <message xml:lang="de">Zum Verwalten der Kindersicherung ist dein Passwort nötig.</message>
+    <message xml:lang="fr">Une authentification est nécessaire pour gérer le contrôle parental.</message>
+    <message xml:lang="es">Se requiere autenticación para administrar el control parental.</message>
+    <icon_name>tuxsitter</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/tuxsitter/gui.py</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
+  </action>
+</policyconfig>
