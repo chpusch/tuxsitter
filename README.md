@@ -114,9 +114,12 @@ your browser    ──DNS──▶ router (unchanged)
 
 ## Privacy
 
-- No accounts, no cloud, no telemetry. Settings and usage stay in `/etc/tuxsitter` and `/var/lib/tuxsitter`.
+- No accounts, no cloud, no telemetry, no usage statistics. Settings and usage stay in `/etc/tuxsitter` and `/var/lib/tuxsitter`.
 - Tuxsitter does **not** record which websites your child visits - it only counts screen time.
 - DNS queries of the child's account go to the provider *you* choose. Check their privacy policy.
+- **Update check:** the parent app asks GitHub at most once a day whether a newer release exists.
+  This is one anonymous request (GitHub sees your IP address, nothing else is sent).
+  Switch it off in the menu: *Check for updates*.
 
 ## Limitations
 

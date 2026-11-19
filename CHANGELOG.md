@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 - 2026-11-19
+
+- Update hint: the parent app checks GitHub at most once a day and shows a bar when a newer
+  version is available. Anonymous, can be switched off in the menu ("Check for updates").
+
 ## 0.1.2 - 2026-11-19
 
 - Clearer remaining time: the parent app and the panel now say when the remaining time is

@@ -92,6 +92,9 @@ ungefiltertem Internet. Deine eigenen Konten fragen weiter ganz normal deinen Ro
 - Keine Konten, keine Cloud, keine Telemetrie. Alles bleibt in `/etc/tuxsitter` und `/var/lib/tuxsitter`.
 - Tuxsitter speichert **nicht**, welche Seiten dein Kind besucht – nur die Bildschirmzeit.
 - Die DNS-Anfragen des Kinderkontos gehen an den Anbieter, den *du* wählst.
+- **Update-Prüfung:** Die Eltern-App fragt höchstens einmal am Tag bei GitHub nach, ob es eine neue Version gibt.
+  Das ist eine anonyme Anfrage (GitHub sieht deine IP-Adresse, sonst wird nichts übertragen).
+  Abschaltbar im Menü unter *Nach Updates suchen*.
 
 ## Grenzen
 

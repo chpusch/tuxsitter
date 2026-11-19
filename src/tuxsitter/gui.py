@@ -12,6 +12,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import i18n  # noqa: E402
 import common as C  # noqa: E402
+import updates  # noqa: E402
 from i18n import _  # noqa: E402
 
 import gi  # noqa: E402
@@ -149,6 +150,29 @@ def info(parent, title, text, error=False):
     d.format_secondary_text(text)
     d.run()
     d.destroy()
+
+
+def open_url_as_user(parent, url):
+    """Open a link in the parent's own browser - never start a browser as root."""
+    user = invoking_user()
+    try:
+        uid = pwd.getpwnam(user).pw_uid if user else None
+    except KeyError:
+        uid = None
+    if uid is not None:
+        env = ["DISPLAY=" + os.environ.get("DISPLAY", ":0"),
+               "XDG_RUNTIME_DIR=/run/user/%d" % uid,
+               "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%d/bus" % uid]
+        if os.environ.get("XAUTHORITY"):
+            env.append("XAUTHORITY=" + os.environ["XAUTHORITY"])
+        try:
+            subprocess.Popen(["runuser", "-u", user, "--", "env"] + env + ["xdg-open", url],
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            return
+        except OSError:
+            pass
+    Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).set_text(url, -1)
+    info(parent, _("Link copied"), _("Open this address in your browser:") + "\n" + url)
 
 
 def daemon_call(msg, timeout=5):
@@ -419,6 +443,11 @@ class MainWindow(Gtk.ApplicationWindow):
             it = Gtk.MenuItem(label=text)
             it.connect("activate", cb)
             menu.append(it)
+        menu.insert(Gtk.SeparatorMenuItem(), 1)
+        upd = Gtk.CheckMenuItem(label=_("Check for updates"))
+        upd.set_active(bool(self.cfg.get("update_check", True)))
+        upd.connect("toggled", self.on_toggle_updates)
+        menu.insert(upd, 1)
         menu.show_all()
         menu_btn.set_popup(menu)
         hb.pack_end(menu_btn)
@@ -431,6 +460,14 @@ class MainWindow(Gtk.ApplicationWindow):
         self.daemon_bar.connect("response", self.on_start_daemon)
         self.daemon_bar.set_no_show_all(True)
         outer.pack_start(self.daemon_bar, False, False, 0)
+        self.update_bar = Gtk.InfoBar(message_type=Gtk.MessageType.INFO, show_close_button=True)
+        self.update_label = label("")
+        self.update_bar.get_content_area().add(self.update_label)
+        self.update_bar.add_button(_("Download"), 1)
+        self.update_bar.connect("response", self.on_update_response)
+        self.update_bar.set_no_show_all(True)
+        self.update_url = None
+        outer.pack_start(self.update_bar, False, False, 0)
 
         main = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         outer.pack_start(main, True, True, 0)
@@ -466,6 +503,7 @@ class MainWindow(Gtk.ApplicationWindow):
         GLib.timeout_add_seconds(5, self.refresh_status)
         if not self.cfg.get("pin"):
             GLib.idle_add(self.first_pin)
+        self.start_update_check()
 
     # ---- Empty state -------------------------------------------------------
     def build_empty(self):
@@ -1020,6 +1058,38 @@ class MainWindow(Gtk.ApplicationWindow):
         self.cur = None
         self.do_save()
         self.fill_sidebar()
+
+    # ---- Update hint -------------------------------------------------------
+    def start_update_check(self, force=False):
+        if not self.cfg.get("update_check", True):
+            return
+
+        def run():
+            res = updates.check(force=force)
+            if res:
+                GLib.idle_add(self.show_update, *res)
+        threading.Thread(target=run, daemon=True).start()
+
+    def show_update(self, version, url):
+        self.update_url = url
+        self.update_label.set_text(_("Tuxsitter {version} is available (installed: {installed}).").format(
+            version=version, installed=C.VERSION))
+        self.update_bar.show()
+        self.update_bar.show_all()
+        return False
+
+    def on_update_response(self, bar, resp):
+        if resp == 1 and self.update_url:
+            open_url_as_user(self, self.update_url)
+        bar.hide()
+
+    def on_toggle_updates(self, item):
+        self.cfg["update_check"] = item.get_active()
+        self.schedule_save()
+        if item.get_active():
+            self.start_update_check(force=True)
+        else:
+            self.update_bar.hide()
 
     def on_about(self, *_args):
         a = Gtk.AboutDialog(transient_for=self, modal=True, program_name=C.APP_NAME,
