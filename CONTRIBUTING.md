@@ -43,5 +43,6 @@ Tips:
 ## Release checklist
 
 1. Bump `VERSION` in `src/tuxsitter/common.py` and add an entry to `CHANGELOG.md`.
-2. Commit, then tag: `git tag v0.2.0 && git push --tags`.
-3. GitHub Actions builds the `.deb` and attaches it to the release.
+2. Commit and push to `main`.
+3. On GitHub: **Releases → Draft a new release**, create the tag (e.g. `v0.2.0`) on `main`, publish.
+4. GitHub Actions builds the `.deb` and attaches it to the release automatically (takes about a minute).
