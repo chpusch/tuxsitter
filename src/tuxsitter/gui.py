@@ -189,7 +189,7 @@ class PinDialog(Gtk.Dialog):
         self.set_default_response(Gtk.ResponseType.OK)
         self.show_all()
 
-    def check(self, *_):
+    def check(self, *_args):
         a, b = self.e1.get_text(), self.e2.get_text()
         ok = a.isdigit() and 4 <= len(a) <= 8 and a == b
         if a and not (a.isdigit() and len(a) >= 4):
@@ -260,19 +260,19 @@ class AddChildDialog(Gtk.Dialog):
         self.update()
         self.show_all()
 
-    def _name_changed(self, *_):
+    def _name_changed(self, *_args):
         if not self._user_edited:
             self._setting = True
             self.e_user.set_text(username_from(self.e_name.get_text()))
             self._setting = False
         self.update()
 
-    def _user_changed(self, *_):
+    def _user_changed(self, *_args):
         if not getattr(self, "_setting", False):
             self._user_edited = True
         self.update()
 
-    def update(self, *_):
+    def update(self, *_args):
         new = self.radio_new.get_active()
         self.combo.set_sensitive(not new)
         for w in (self.e_name, self.e_user, self.e_pw1, self.e_pw2):
@@ -349,7 +349,7 @@ class HistoryChart(Gtk.DrawingArea):
         n = len(self.data) or 1
         top, bottom = 22, 38
         ch = H - top - bottom
-        maxv = max([v for _, v in self.data] + [3600])
+        maxv = max([v for _day, v in self.data] + [3600])
         gap = 8
         bw = max(6, (W - gap * (n + 1)) / n)
         cr.select_font_face("Sans")
@@ -543,7 +543,7 @@ class MainWindow(Gtk.ApplicationWindow):
         head.pack_start(hv, True, True, 0)
         sw_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2, valign=Gtk.Align.CENTER)
         active = Gtk.Switch(active=c.get("enabled", True), halign=Gtk.Align.END)
-        active.connect("notify::active", lambda s, _: self.set_val(c, "enabled", s.get_active()))
+        active.connect("notify::active", lambda s, _pspec: self.set_val(c, "enabled", s.get_active()))
         sw_box.pack_start(active, False, False, 0)
         sw_box.pack_start(label(_("Protection on"), "ks-small dim-label", xalign=1), False, False, 0)
         head.pack_end(sw_box, False, False, 0)
@@ -553,7 +553,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.admin_bar.get_content_area().add(label(
             _("This account has administrator rights and could switch the protection off."), wrap=True))
         self.admin_bar.add_button(_("Remove rights"), 1)
-        self.admin_bar.connect("response", lambda *_: self.on_remove_admin(user))
+        self.admin_bar.connect("response", lambda *_args: self.on_remove_admin(user))
         self.admin_bar.set_no_show_all(True)
         page.pack_start(self.admin_bar, False, False, 0)
 
@@ -601,7 +601,7 @@ class MainWindow(Gtk.ApplicationWindow):
         lst = boxed_list()
         self.lock_switch = Gtk.Switch()
         self._lock_handler = self.lock_switch.connect(
-            "notify::active", lambda s, _: self.cmd({"cmd": "lock", "user": user, "on": s.get_active()}))
+            "notify::active", lambda s, _pspec: self.cmd({"cmd": "lock", "user": user, "on": s.get_active()}))
         lst.add(setting_row(_("Lock for today"), self.lock_switch,
                             _("Logs your child out after one minute. Tomorrow everything is back to normal.")))
         reset = Gtk.Button(label=_("Reset"))
@@ -613,7 +613,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
         rm = Gtk.Button(label=_("Remove child from Tuxsitter"), halign=Gtk.Align.START, margin_top=24)
         rm.get_style_context().add_class("destructive-action")
-        rm.connect("clicked", lambda *_: self.on_remove_child(user))
+        rm.connect("clicked", lambda *_args: self.on_remove_child(user))
         b.pack_start(rm, False, False, 0)
         return b
 
@@ -663,7 +663,7 @@ class MainWindow(Gtk.ApplicationWindow):
             self.admin_bar.hide()
         if hasattr(self, "chart"):
             self.chart.set_data(st.get("history", []))
-            week = [v for _, v in st.get("history", [])[-7:]]
+            week = [v for _day, v in st.get("history", [])[-7:]]
             if week:
                 self.hist_sum.set_text(_("Average of the last 7 days: {time} per day").format(
                     time=C.fmt_duration(sum(week) / len(week))))
@@ -673,7 +673,7 @@ class MainWindow(Gtk.ApplicationWindow):
         b = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         lst = boxed_list()
         hol = Gtk.Switch(active=bool(c.get("holiday_mode")))
-        hol.connect("notify::active", lambda s, _: self.set_val(c, "holiday_mode", s.get_active()))
+        hol.connect("notify::active", lambda s, _pspec: self.set_val(c, "holiday_mode", s.get_active()))
         lst.add(setting_row(_("Holiday mode"), hol, _("During school holidays the weekend rules apply every day.")))
         b.pack_start(lst, False, False, 0)
         for key, title in (("school", _("School days (Monday to Friday)")), ("weekend", _("Weekend (Saturday and Sunday)"))):
@@ -707,7 +707,7 @@ class MainWindow(Gtk.ApplicationWindow):
             self.set_val(d, "limit_min", v)
         scale.connect("value-changed", on_scale)
 
-        def on_limit(s, _):
+        def on_limit(s, _pspec):
             scale.set_sensitive(s.get_active())
             self.set_val(d, "limit_enabled", s.get_active())
         sw.connect("notify::active", on_limit)
@@ -733,7 +733,7 @@ class MainWindow(Gtk.ApplicationWindow):
         r3.add(h3)
         lst.add(r3)
 
-        def on_time(*_):
+        def on_time(*_args):
             s, e = c_from.get_active_id(), c_to.get_active_id()
             warn.set_text("" if C.hm_to_min(e) > C.hm_to_min(s) else _("End must be after start"))
             self.set_val(d, "start", s)
@@ -741,7 +741,7 @@ class MainWindow(Gtk.ApplicationWindow):
         c_from.connect("changed", on_time)
         c_to.connect("changed", on_time)
 
-        def on_window(s, _):
+        def on_window(s, _pspec):
             for w in (c_from, c_to):
                 w.set_sensitive(s.get_active())
             self.set_val(d, "window_enabled", s.get_active())
@@ -793,7 +793,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
         self.dns_hint = label("", "ks-small", wrap=True)
         test = Gtk.Button(label=_("Test connection"), halign=Gtk.Align.START)
-        test.connect("clicked", lambda *_: self.on_dns_test(d))
+        test.connect("clicked", lambda *_args: self.on_dns_test(d))
         th = Gtk.Box(spacing=12)
         th.pack_start(test, False, False, 0)
         th.pack_start(self.dns_hint, True, True, 0)
@@ -808,7 +808,7 @@ class MainWindow(Gtk.ApplicationWindow):
         inner.pack_start(label(_("Extra protection"), "ks-section"), False, False, 0)
         opt = boxed_list()
         ss = Gtk.Switch(active=d["safesearch"])
-        ss.connect("notify::active", lambda s, _: self.set_val(d, "safesearch", s.get_active()))
+        ss.connect("notify::active", lambda s, _pspec: self.set_val(d, "safesearch", s.get_active()))
         opt.add(setting_row(_("Enforce SafeSearch"), ss, _("Google, Bing and DuckDuckGo only show family-friendly results.")))
         yt = Gtk.ComboBoxText()
         for k, t in (("off", _("No restriction")), ("moderate", _("Restricted")), ("strict", _("Strict"))):
@@ -817,13 +817,13 @@ class MainWindow(Gtk.ApplicationWindow):
         yt.connect("changed", lambda w: self.set_val(d, "youtube", w.get_active_id()))
         opt.add(setting_row("YouTube", yt, _("Restricted Mode hides videos that are not suitable for children.")))
         bp = Gtk.Switch(active=d["block_bypass"])
-        bp.connect("notify::active", lambda s, _: self.set_val(d, "block_bypass", s.get_active()))
+        bp.connect("notify::active", lambda s, _pspec: self.set_val(d, "block_bypass", s.get_active()))
         opt.add(setting_row(_("Block workarounds"), bp,
                             _("Blocks encrypted DNS (DoH/DoT) of other providers and the Tor download, "
                               "so the filter cannot be bypassed.")))
         inner.pack_start(opt, False, False, 0)
 
-        def on_en(s, _):
+        def on_en(s, _pspec):
             inner.set_sensitive(s.get_active())
             self.set_val(d, "enabled", s.get_active())
         en.connect("notify::active", on_en)
@@ -947,7 +947,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.update_today()
         return True
 
-    def on_start_daemon(self, *_):
+    def on_start_daemon(self, *_args):
         subprocess.run(["systemctl", "enable", "--now", "tuxsitter.service"])
         GLib.timeout_add(1500, lambda: self.refresh_status() and False)
 
@@ -962,14 +962,14 @@ class MainWindow(Gtk.ApplicationWindow):
             self.on_add_child()
         return False
 
-    def on_change_pin(self, *_):
+    def on_change_pin(self, *_args):
         d = PinDialog(self)
         if d.run() == Gtk.ResponseType.OK:
             self.cfg["pin"] = C.hash_pin(d.pin())
             self.do_save()
         d.destroy()
 
-    def on_add_child(self, *_):
+    def on_add_child(self, *_args):
         d = AddChildDialog(self, self.cfg["children"])
         resp = d.run()
         res = d.result()
@@ -1011,7 +1011,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.do_save()
         self.fill_sidebar()
 
-    def on_about(self, *_):
+    def on_about(self, *_args):
         a = Gtk.AboutDialog(transient_for=self, modal=True, program_name=C.APP_NAME,
                             version=C.VERSION, logo_icon_name="tuxsitter",
                             comments=_("Screen time, allowed hours and an internet filter for children's accounts on Linux."),
@@ -1048,6 +1048,35 @@ def apply_theme(argv):
         s.set_property("gtk-application-prefer-dark-theme", True)
 
 
+LOG_FILE = "/var/log/tuxsitter-gui.log"
+_in_error_dialog = False
+
+
+def excepthook(exc_type, exc, tb):
+    """Log unexpected errors and show them, instead of failing silently."""
+    import traceback
+    text = "".join(traceback.format_exception(exc_type, exc, tb))
+    sys.stderr.write(text)
+    try:
+        with open(LOG_FILE, "a", encoding="utf-8") as f:
+            f.write("%s Tuxsitter %s\n%s\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), C.VERSION, text))
+    except OSError:
+        pass
+    global _in_error_dialog
+    if _in_error_dialog:
+        return
+    _in_error_dialog = True
+    try:
+        d = Gtk.MessageDialog(modal=True, message_type=Gtk.MessageType.ERROR,
+                              buttons=Gtk.ButtonsType.CLOSE, text=_("Unexpected error"))
+        d.format_secondary_text(_("Please report this at {url} and attach {log}.").format(
+            url=C.HOMEPAGE + "/issues", log=LOG_FILE) + "\n\n" + str(exc))
+        d.run()
+        d.destroy()
+    finally:
+        _in_error_dialog = False
+
+
 def main():
     if os.geteuid() != 0:
         os.execvp("pkexec", ["pkexec", os.path.abspath(__file__)] + sys.argv[1:])
@@ -1055,6 +1084,7 @@ def main():
     if lang:
         i18n.setup(lang)
     apply_theme(sys.argv)
+    sys.excepthook = excepthook
     prov = Gtk.CssProvider()
     prov.load_from_data(CSS)
     Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), prov,

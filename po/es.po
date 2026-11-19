@@ -490,6 +490,10 @@ msgstr "Quitar"
 msgid "Screen time, allowed hours and an internet filter for children's accounts on Linux."
 msgstr "Tiempo de pantalla, horario permitido y filtro de internet para cuentas infantiles en Linux."
 
+#: src/tuxsitter/gui.py:1071
+msgid "Unexpected error"
+msgstr "Error inesperado"
+
 #: src/tuxsitter/gui.py:198
 msgid "The PINs do not match."
 msgstr "Los PIN no coinciden."
@@ -603,6 +607,11 @@ msgstr "Quedan {time}"
 #, python-brace-format
 msgid "Average of the last 7 days: {time} per day"
 msgstr "Media de los últimos 7 días: {time} al día"
+
+#: src/tuxsitter/gui.py:1072
+#, python-brace-format
+msgid "Please report this at {url} and attach {log}."
+msgstr "Por favor, infórmalo en {url} y adjunta {log}."
 
 #: src/tuxsitter/gui.py:290
 msgid "The passwords do not match."

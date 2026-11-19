@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1 - 2026-11-19
+
+- Fix: the parent app could stop working while entering the first PIN (and in a few other
+  dialogs) because a callback parameter named `_` hid the translation function.
+- Unexpected errors in the parent app are now shown and logged to `/var/log/tuxsitter-gui.log`.
+- New test that catches this kind of bug.
+
 ## 0.1.0 - 2026-11-19
 
 First public version.

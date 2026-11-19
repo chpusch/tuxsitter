@@ -488,6 +488,10 @@ msgstr ""
 msgid "Screen time, allowed hours and an internet filter for children's accounts on Linux."
 msgstr ""
 
+#: src/tuxsitter/gui.py:1071
+msgid "Unexpected error"
+msgstr ""
+
 #: src/tuxsitter/gui.py:198
 msgid "The PINs do not match."
 msgstr ""
@@ -600,6 +604,11 @@ msgstr ""
 #: src/tuxsitter/gui.py:668
 #, python-brace-format
 msgid "Average of the last 7 days: {time} per day"
+msgstr ""
+
+#: src/tuxsitter/gui.py:1072
+#, python-brace-format
+msgid "Please report this at {url} and attach {log}."
 msgstr ""
 
 #: src/tuxsitter/gui.py:290

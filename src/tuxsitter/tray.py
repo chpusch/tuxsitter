@@ -99,7 +99,7 @@ class ExtraTimeBox(Gtk.Box):
         self.pack_start(btn, False, False, 0)
         self.pack_start(self.msg, False, False, 0)
 
-    def submit(self, *_):
+    def submit(self, *_args):
         minutes = next(m for m, rb in self.radios.items() if rb.get_active())
         try:
             r = C.request({"cmd": "extra", "pin": self.pin.get_text(), "minutes": minutes})
@@ -185,7 +185,7 @@ class Tray:
         self.m_window = Gtk.MenuItem(label="")
         self.m_window.set_sensitive(False)
         m_extra = Gtk.MenuItem(label=_("Ask for more time…"))
-        m_extra.connect("activate", lambda *_: ExtraDialog())
+        m_extra.connect("activate", lambda *_args: ExtraDialog())
         for it in (self.m_time, self.m_window, Gtk.SeparatorMenuItem(), m_extra):
             self.menu.append(it)
         self.menu.show_all()
@@ -212,7 +212,7 @@ class Tray:
         else:
             self.icon = Gtk.StatusIcon.new_from_icon_name("tuxsitter")
             self.icon.connect("popup-menu", lambda i, b, t: self.menu.popup(None, None, None, None, b, t))
-            self.icon.connect("activate", lambda *_: self.menu.popup(None, None, None, None, 0,
+            self.icon.connect("activate", lambda *_args: self.menu.popup(None, None, None, None, 0,
                                                                      Gtk.get_current_event_time()))
             self.kind = "gtk"
 
