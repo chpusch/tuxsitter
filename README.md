@@ -43,6 +43,13 @@ Parents get one simple window; the child sees how much time is left in the panel
   Tuxsitter warns you if the child's account has admin rights and can remove them.
 - 🌍 **Languages**: English, Deutsch, Français, Español
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/today-de.png" width="720" alt="Tuxsitter parent app: today's overview with remaining time, extra time buttons and lock switch">
+  <br><sub>Parent app – today's overview (German UI)</sub>
+</p>
+
 ## Installation
 
 ### Linux Mint / Ubuntu / Debian

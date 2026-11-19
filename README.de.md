@@ -44,6 +44,13 @@ einfaches Fenster, das Kind sieht im Panel, wie viel Zeit noch übrig ist.
   Tuxsitter warnt, wenn das Kinderkonto Admin-Rechte hat, und kann sie entfernen.
 - 🌍 **Sprachen**: Deutsch, English, Français, Español
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/today-de.png" width="720" alt="Tuxsitter Eltern-App: Tagesübersicht mit Restzeit, Extrazeit-Knöpfen und Sperre">
+  <br><sub>Eltern-App – Übersicht „Heute“</sub>
+</p>
+
 ## Installation
 
 1. `tuxsitter_<version>_all.deb` unter [Releases](https://github.com/chpusch/tuxsitter/releases) herunterladen.
