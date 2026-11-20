@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1 - 2026-11-20
+
+- NextDNS field: the placeholder no longer shows an example ID in real NextDNS format, so nobody
+  accidentally uses someone else's profile.
+
 ## 0.2.0 - 2026-11-19
 
 - Update hint: the parent app checks GitHub at most once a day and shows a bar when a newer

@@ -13,7 +13,7 @@ from i18n import _, N_
 
 APP_NAME = "Tuxsitter"
 APP_ID = "io.github.chpusch.Tuxsitter"
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 HOMEPAGE = "https://github.com/chpusch/tuxsitter"
 
 CONFIG_DIR = os.environ.get("TUXSITTER_CONFIG_DIR", "/etc/tuxsitter")

@@ -423,8 +423,8 @@ msgid "Filter provider"
 msgstr "Proveedor de filtro"
 
 #: src/tuxsitter/gui.py:816
-msgid "Profile ID, e.g. a1b2c3"
-msgstr "ID de perfil, p. ej. a1b2c3"
+msgid "Profile ID (6 characters)"
+msgstr "ID de perfil (6 caracteres)"
 
 #: src/tuxsitter/gui.py:818
 msgid "e.g. 192.168.1.2"

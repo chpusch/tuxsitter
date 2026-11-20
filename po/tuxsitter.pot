@@ -421,7 +421,7 @@ msgid "Filter provider"
 msgstr ""
 
 #: src/tuxsitter/gui.py:816
-msgid "Profile ID, e.g. a1b2c3"
+msgid "Profile ID (6 characters)"
 msgstr ""
 
 #: src/tuxsitter/gui.py:818

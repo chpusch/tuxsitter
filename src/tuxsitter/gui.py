@@ -813,7 +813,7 @@ class MainWindow(Gtk.ApplicationWindow):
         inner.pack_start(label(_("Filter provider"), "ks-section"), False, False, 0)
         plist = boxed_list()
         group = None
-        self.nextdns_entry = Gtk.Entry(placeholder_text=_("Profile ID, e.g. a1b2c3"), width_chars=16)
+        self.nextdns_entry = Gtk.Entry(placeholder_text=_("Profile ID (6 characters)"), width_chars=16)
         self.nextdns_entry.set_text(d.get("nextdns_id", ""))
         self.custom_entry = Gtk.Entry(placeholder_text=_("e.g. 192.168.1.2"), width_chars=16)
         self.custom_entry.set_text(d.get("custom", ""))
