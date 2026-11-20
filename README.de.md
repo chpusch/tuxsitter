@@ -46,10 +46,16 @@ einfaches Fenster, das Kind sieht im Panel, wie viel Zeit noch übrig ist.
 
 ## Screenshots
 
-<p align="center">
-  <img src="docs/screenshots/today-de.png" width="720" alt="Tuxsitter Eltern-App: Tagesübersicht mit Restzeit, Extrazeit-Knöpfen und Sperre">
-  <br><sub>Eltern-App – Übersicht „Heute“</sub>
-</p>
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/today-de.png" alt="Heute: Restzeit, Extrazeit, Sperre"><br><sub>Heute: Restzeit, Extrazeit, Sperre</sub></td>
+    <td align="center"><img src="docs/screenshots/schedule-de.png" alt="Zeiten: Schultage, Wochenende, Ferien"><br><sub>Zeiten: Schultage, Wochenende, Ferien</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/internet-de.png" alt="Internet: Familienfilter wählen"><br><sub>Internet: Familienfilter wählen</sub></td>
+    <td align="center"><img src="docs/screenshots/history-de.png" alt="Verlauf der letzten 14 Tage"><br><sub>Verlauf der letzten 14 Tage</sub></td>
+  </tr>
+</table>
 
 ## Installation
 

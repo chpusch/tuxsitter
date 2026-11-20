@@ -45,10 +45,16 @@ Parents get one simple window; the child sees how much time is left in the panel
 
 ## Screenshots
 
-<p align="center">
-  <img src="docs/screenshots/today-de.png" width="720" alt="Tuxsitter parent app: today's overview with remaining time, extra time buttons and lock switch">
-  <br><sub>Parent app – today's overview (German UI)</sub>
-</p>
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/today-de.png" alt="Today: remaining time, extra time, lock"><br><sub>Today: remaining time, extra time, lock</sub></td>
+    <td align="center"><img src="docs/screenshots/schedule-de.png" alt="Schedule: school days, weekend, holidays"><br><sub>Schedule: school days, weekend, holidays</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/internet-de.png" alt="Internet: choose a family DNS filter"><br><sub>Internet: choose a family DNS filter</sub></td>
+    <td align="center"><img src="docs/screenshots/history-de.png" alt="History of the last 14 days"><br><sub>History of the last 14 days</sub></td>
+  </tr>
+</table>
 
 ## Installation
 
