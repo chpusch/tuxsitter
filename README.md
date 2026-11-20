@@ -56,6 +56,8 @@ Parents get one simple window; the child sees how much time is left in the panel
   </tr>
 </table>
 
+<sub>The screenshots show the German interface - Tuxsitter follows your system language (English, German, French, Spanish).</sub>
+
 ## Installation
 
 ### Linux Mint / Ubuntu / Debian
