@@ -32,7 +32,7 @@ Parents get one simple window; the child sees how much time is left in the panel
 - 🕖 **Allowed hours** - e.g. only between 07:00 and 20:00
 - ⚠️ **Fair warnings** - notifications at 15, 5 and 1 minute, then a 60-second countdown before logout
 - 🔑 **Extra time with a parent PIN** - right on the child's computer, no need to log in
-- 🌐 **Internet filter for the child's account only** - your own accounts stay untouched
+- 🌐 **Internet filter for the child's account only** - your own accounts stay untouched, queries are encrypted
   - choose a family DNS provider: Cloudflare for Families, CleanBrowsing, AdGuard Family,
     OpenDNS FamilyShield, **your own NextDNS profile**, or a custom server (e.g. Pi-hole)
   - enforced **SafeSearch** for Google, Bing and DuckDuckGo
@@ -114,7 +114,8 @@ DNS forwarder inside the service, listening only on `127.0.0.1`/`::1`. The forwa
 
 1. answers blocked names (DoH servers, `use-application-dns.net`, the Tor website) with "does not exist",
 2. maps Google/Bing/DuckDuckGo to their SafeSearch addresses and YouTube to Restricted Mode,
-3. forwards everything else to the chosen provider - classic DNS, or encrypted DNS-over-HTTPS for NextDNS.
+3. forwards everything else to the chosen provider - **encrypted** via DNS-over-HTTPS with certificate
+   checking for all built-in providers (a custom server such as a Pi-hole at home uses classic DNS).
 
 In addition, the child's account cannot reach well-known public resolvers (1.1.1.1, 8.8.8.8, 9.9.9.9, …)
 or DNS-over-TLS (port 853), so a browser cannot quietly bypass the filter.
@@ -131,7 +132,10 @@ your browser    ──DNS──▶ router (unchanged)
 
 - No accounts, no cloud, no telemetry, no usage statistics. Settings and usage stay in `/etc/tuxsitter` and `/var/lib/tuxsitter`.
 - Tuxsitter does **not** record which websites your child visits - it only counts screen time.
-- DNS queries of the child's account go to the provider *you* choose. Check their privacy policy.
+- DNS queries of the child's account go **encrypted** to the provider *you* choose - your internet provider
+  or someone on the same Wi-Fi cannot read them. Check the filter provider's privacy policy.
+- With NextDNS the device name `Tuxsitter-<username>` is sent, so you can see in your NextDNS logs which
+  child made a request.
 - **Update check:** the parent app asks GitHub at most once a day whether a newer release exists.
   This is one anonymous request (GitHub sees your IP address, nothing else is sent).
   Switch it off in the menu: *Check for updates*.
@@ -159,6 +163,7 @@ The firewall rules are removed automatically.
 ## Useful commands
 
 ```sh
+python3 /usr/lib/tuxsitter/check_providers.py   # live test of all filter providers
 systemctl status tuxsitter            # is the service running?
 journalctl -u tuxsitter -f            # log
 sudo nft list table inet tuxsitter    # current firewall rules

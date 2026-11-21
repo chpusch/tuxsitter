@@ -13,7 +13,7 @@ from i18n import _, N_
 
 APP_NAME = "Tuxsitter"
 APP_ID = "io.github.chpusch.Tuxsitter"
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 HOMEPAGE = "https://github.com/chpusch/tuxsitter"
 
 CONFIG_DIR = os.environ.get("TUXSITTER_CONFIG_DIR", "/etc/tuxsitter")
@@ -26,38 +26,39 @@ SOCKET_PATH = os.path.join(RUN_DIR, "tuxsitter.sock")
 DNS_PORT_BASE = 20000  # child with UID 1001 -> local port 21001
 
 # ---------------------------------------------------------------------------
-# DNS providers
+# DNS providers - all built-in providers are queried encrypted (DNS-over-HTTPS).
+# Endpoints from the providers' own documentation; check them live with
+#   python3 tools/check-providers.py
 # ---------------------------------------------------------------------------
 PROVIDERS = {
     "cloudflare": {
         "name": "Cloudflare for Families",
         "desc": N_("Blocks adult content and malware. Free and very fast."),
-        "servers": ["1.1.1.3", "1.0.0.3"],
+        "doh": "https://family.cloudflare-dns.com/dns-query",
     },
     "cleanbrowsing": {
         "name": "CleanBrowsing Family",
         "desc": N_("Stricter filter, also blocks VPNs and proxies. Free."),
-        "servers": ["185.228.168.168", "185.228.169.168"],
+        "doh": "https://doh.cleanbrowsing.org/doh/family-filter/",
     },
     "adguard": {
         "name": "AdGuard Family",
         "desc": N_("Blocks adult content and also ads. Free."),
-        "servers": ["94.140.14.15", "94.140.15.16"],
+        "doh": "https://family.adguard-dns.com/dns-query",
     },
     "opendns": {
         "name": "OpenDNS FamilyShield",
         "desc": N_("Blocks adult content. Free."),
-        "servers": ["208.67.222.123", "208.67.220.123"],
+        "doh": "https://familyshield.opendns.com/dns-query",
     },
     "nextdns": {
         "name": N_("NextDNS (your own profile)"),
         "desc": N_("Configure everything yourself at my.nextdns.io and enter the profile ID here."),
-        "servers": [],
+        "doh": "https://dns.nextdns.io/{id}/{device}",
     },
     "custom": {
         "name": N_("Custom DNS server"),
         "desc": N_("IP address(es) of your own filter, e.g. Pi-hole. Separate several with commas."),
-        "servers": [],
     },
 }
 PROVIDER_ORDER = ["cloudflare", "cleanbrowsing", "adguard", "opendns", "nextdns", "custom"]

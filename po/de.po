@@ -11,114 +11,114 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/tuxsitter/common.py:225
+#: src/tuxsitter/common.py:226
 msgid "Invalid request."
 msgstr "Ungültige Anfrage."
 
-#: src/tuxsitter/common.py:226
+#: src/tuxsitter/common.py:227
 #, python-brace-format
 msgid "Too many attempts. Please try again in {time}."
 msgstr "Zu viele Versuche. Bitte in {time} erneut versuchen."
 
-#: src/tuxsitter/common.py:227
+#: src/tuxsitter/common.py:228
 msgid "No parent PIN has been set yet."
 msgstr "Es wurde noch keine Eltern-PIN festgelegt."
 
-#: src/tuxsitter/common.py:228
+#: src/tuxsitter/common.py:229
 msgid "Wrong PIN."
 msgstr "PIN falsch."
 
-#: src/tuxsitter/common.py:229
+#: src/tuxsitter/common.py:230
 msgid "Permission denied."
 msgstr "Keine Berechtigung."
 
-#: src/tuxsitter/common.py:230
+#: src/tuxsitter/common.py:231
 msgid "Unknown child."
 msgstr "Unbekanntes Kind."
 
-#: src/tuxsitter/common.py:231
+#: src/tuxsitter/common.py:232
 msgid "Unknown command."
 msgstr "Unbekannter Befehl."
 
-#: src/tuxsitter/common.py:232
+#: src/tuxsitter/common.py:233
 msgid "Internal error."
 msgstr "Interner Fehler."
 
-#: src/tuxsitter/common.py:233
+#: src/tuxsitter/common.py:234
 msgid "The Tuxsitter service is not reachable."
 msgstr "Der Tuxsitter-Dienst ist nicht erreichbar."
 
-#: src/tuxsitter/common.py:234
+#: src/tuxsitter/common.py:235
 msgid "Invalid NextDNS profile ID."
 msgstr "Ungültige NextDNS-Profil-ID."
 
-#: src/tuxsitter/common.py:235
+#: src/tuxsitter/common.py:236
 msgid "Invalid DNS server address."
 msgstr "Ungültige DNS-Server-Adresse."
 
-#: src/tuxsitter/common.py:236
+#: src/tuxsitter/common.py:237
 msgid "The filter did not return an address."
 msgstr "Der Filter hat keine Adresse geliefert."
 
-#: src/tuxsitter/common.py:34
+#: src/tuxsitter/common.py:36
 msgid "Blocks adult content and malware. Free and very fast."
 msgstr "Blockiert Erwachseneninhalte und Schadsoftware. Kostenlos und sehr schnell."
 
-#: src/tuxsitter/common.py:39
+#: src/tuxsitter/common.py:41
 msgid "Stricter filter, also blocks VPNs and proxies. Free."
 msgstr "Strengerer Filter, blockiert auch VPNs und Proxys. Kostenlos."
 
-#: src/tuxsitter/common.py:44
+#: src/tuxsitter/common.py:46
 msgid "Blocks adult content and also ads. Free."
 msgstr "Blockiert Erwachseneninhalte und zusätzlich Werbung. Kostenlos."
 
-#: src/tuxsitter/common.py:49
+#: src/tuxsitter/common.py:51
 msgid "Blocks adult content. Free."
 msgstr "Blockiert Erwachseneninhalte. Kostenlos."
 
-#: src/tuxsitter/common.py:53
+#: src/tuxsitter/common.py:55
 msgid "NextDNS (your own profile)"
 msgstr "NextDNS (eigenes Profil)"
 
-#: src/tuxsitter/common.py:54
+#: src/tuxsitter/common.py:56
 msgid "Configure everything yourself at my.nextdns.io and enter the profile ID here."
 msgstr "Alles selbst einstellen unter my.nextdns.io und hier die Profil-ID eintragen."
 
-#: src/tuxsitter/common.py:58
+#: src/tuxsitter/common.py:60
 msgid "Custom DNS server"
 msgstr "Eigener DNS-Server"
 
-#: src/tuxsitter/common.py:59
+#: src/tuxsitter/common.py:61
 msgid "IP address(es) of your own filter, e.g. Pi-hole. Separate several with commas."
 msgstr "IP-Adresse(n) eines eigenen Filters, z. B. Pi-hole. Mehrere mit Komma trennen."
 
-#: src/tuxsitter/common.py:204
+#: src/tuxsitter/common.py:205
 #, python-brace-format
 msgid "{m} min"
 msgstr "{m} Min"
 
-#: src/tuxsitter/common.py:221
+#: src/tuxsitter/common.py:222
 #, python-brace-format
 msgid "tomorrow from {time}"
 msgstr "morgen ab {time} Uhr"
 
-#: src/tuxsitter/common.py:195
+#: src/tuxsitter/common.py:196
 #, python-brace-format
 msgid "{s} s"
 msgstr "{s} Sek"
 
-#: src/tuxsitter/common.py:201
+#: src/tuxsitter/common.py:202
 #, python-brace-format
 msgid "{h} h {m} min"
 msgstr "{h} Std {m} Min"
 
-#: src/tuxsitter/common.py:203
+#: src/tuxsitter/common.py:204
 #: src/tuxsitter/gui.py:744
 #, python-brace-format
 msgid "{h} h"
 msgstr "{h} Std"
 
-#: src/tuxsitter/common.py:220
+#: src/tuxsitter/common.py:221
 #, python-brace-format
 msgid "today from {time}"
 msgstr "heute ab {time} Uhr"

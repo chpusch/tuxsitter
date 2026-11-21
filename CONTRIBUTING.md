@@ -42,6 +42,8 @@ Tips:
 
 ## Release checklist
 
+0. Check that all filter providers still answer: `python3 src/tuxsitter/check_providers.py`
+
 1. Bump `VERSION` in `src/tuxsitter/common.py` and add an entry to `CHANGELOG.md`.
 2. Commit and push to `main`.
 3. On GitHub: **Releases → Draft a new release**, create the tag (e.g. `v0.2.0`) on `main`, publish.

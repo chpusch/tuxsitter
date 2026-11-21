@@ -109,6 +109,7 @@ class Daemon:
         self.last_nft_check = 0
         self.nft_ruleset = None
         self.dns = dnsfilter.DNSServer()
+        self.client_slots = threading.BoundedSemaphore(32)
         self.running = True
 
     # ---- configuration -----------------------------------------------------
@@ -362,10 +363,13 @@ class Daemon:
                 conn, _ = srv.accept()
             except OSError:
                 continue
+            if not self.client_slots.acquire(blocking=False):
+                conn.close()          # too many open connections (e.g. a flood) -> refuse
+                continue
             threading.Thread(target=self._client, args=(conn,), daemon=True).start()
 
     def _client(self, conn):
-        conn.settimeout(10)
+        conn.settimeout(5)
         try:
             cred = conn.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, struct.calcsize("3i"))
             _, uid, _ = struct.unpack("3i", cred)
@@ -385,6 +389,7 @@ class Daemon:
         except OSError:
             pass
         conn.close()
+        self.client_slots.release()
 
     def handle(self, uid, msg):
         cmd = msg.get("cmd")

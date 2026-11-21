@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.2 - 2026-11-21
+
+Security and privacy hardening of the DNS filter.
+
+- **Encrypted DNS for all built-in providers** (DNS-over-HTTPS with certificate checking):
+  Cloudflare for Families, CleanBrowsing Family, AdGuard Family and OpenDNS FamilyShield now use
+  their official DoH endpoints, like NextDNS before. A custom server (e.g. Pi-hole) stays classic DNS.
+- Classic DNS (custom server): every query now uses a random ID and source port, and answers are
+  only accepted if ID and question match - protects against spoofed answers.
+- DoH answers are checked against the question as well.
+- Limits against flooding: max. 256 DNS queries and 32 TCP connections in parallel,
+  max. 32 connections to the control socket.
+- New `check_providers.py`: live test that every provider resolves normal sites and blocks adult content.
+
 ## 0.2.1 - 2026-11-20
 
 - NextDNS field: the placeholder no longer shows an example ID in real NextDNS format, so nobody

@@ -32,7 +32,7 @@ einfaches Fenster, das Kind sieht im Panel, wie viel Zeit noch übrig ist.
 - 🕖 **Erlaubte Uhrzeiten** – z. B. nur zwischen 07:00 und 20:00 Uhr
 - ⚠️ **Faire Vorwarnung** – Hinweise bei 15, 5 und 1 Minute, dann 60 Sekunden Countdown bis zur Abmeldung
 - 🔑 **Extrazeit per Eltern-PIN** – direkt am PC des Kindes, ohne Anmelden
-- 🌐 **Internet-Filter nur für das Kinderkonto** – deine eigenen Konten bleiben unberührt
+- 🌐 **Internet-Filter nur für das Kinderkonto** – deine eigenen Konten bleiben unberührt, Anfragen verschlüsselt
   - Familienfilter wählbar: Cloudflare for Families, CleanBrowsing, AdGuard Family,
     OpenDNS FamilyShield, **eigenes NextDNS-Profil** oder eigener Server (z. B. Pi-hole)
   - **SafeSearch** erzwungen für Google, Bing und DuckDuckGo
@@ -96,7 +96,8 @@ Minute Countdown, dann wird das Kind abgemeldet.
 `nftables`-Regel leitet *alle DNS-Anfragen des Kinderkontos* (Port 53, egal an welchen Server) auf einen
 kleinen DNS-Weiterleiter im Dienst um, der nur lokal lauscht. Er sperrt Umgehungs-Adressen, biegt
 Suchmaschinen auf SafeSearch und YouTube auf den eingeschränkten Modus um und reicht alles andere an den
-gewählten Filter weiter – bei NextDNS verschlüsselt über HTTPS. Öffentliche DNS-Server (1.1.1.1, 8.8.8.8 …)
+gewählten Filter weiter – bei allen eingebauten Anbietern **verschlüsselt** über HTTPS (nur ein eigener Server
+wie Pi-hole läuft klassisch). Öffentliche DNS-Server (1.1.1.1, 8.8.8.8 …)
 und DNS-over-TLS sind für das Kinderkonto gesperrt. Fällt der Filter aus, gibt es **kein** Internet statt
 ungefiltertem Internet. Deine eigenen Konten fragen weiter ganz normal deinen Router.
 
@@ -104,7 +105,10 @@ ungefiltertem Internet. Deine eigenen Konten fragen weiter ganz normal deinen Ro
 
 - Keine Konten, keine Cloud, keine Telemetrie. Alles bleibt in `/etc/tuxsitter` und `/var/lib/tuxsitter`.
 - Tuxsitter speichert **nicht**, welche Seiten dein Kind besucht – nur die Bildschirmzeit.
-- Die DNS-Anfragen des Kinderkontos gehen an den Anbieter, den *du* wählst.
+- Die DNS-Anfragen des Kinderkontos gehen **verschlüsselt** an den Anbieter, den *du* wählst – dein
+  Internetanbieter oder jemand im selben WLAN kann sie nicht mitlesen.
+- Bei NextDNS wird als Gerätename `Tuxsitter-<Benutzername>` übertragen, damit du im NextDNS-Protokoll
+  siehst, welches Kind angefragt hat.
 - **Update-Prüfung:** Die Eltern-App fragt höchstens einmal am Tag bei GitHub nach, ob es eine neue Version gibt.
   Das ist eine anonyme Anfrage (GitHub sieht deine IP-Adresse, sonst wird nichts übertragen).
   Abschaltbar im Menü unter *Nach Updates suchen*.

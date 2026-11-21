@@ -12,11 +12,14 @@ import ipaddress
 import logging
 import queue
 import re
+import secrets
 import select
 import socket
+import ssl
 import struct
 import threading
 import time
+import urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 
 log = logging.getLogger("tuxsitter.dns")
@@ -33,7 +36,7 @@ DOH_HOSTS = {
     "dns.google", "dns.google.com", "8888.google", "dns64.dns.google",
     "cloudflare-dns.com", "one.one.one.one", "1dot1dot1dot1.cloudflare-dns.com",
     "dns.quad9.net", "dns9.quad9.net", "dns10.quad9.net", "dns11.quad9.net",
-    "doh.opendns.com", "doh.familyshield.opendns.com", "dns.umbrella.com",
+    "doh.opendns.com", "doh.familyshield.opendns.com", "familyshield.opendns.com", "dns.opendns.com", "dns.umbrella.com",
     "dns.adguard.com", "dns.adguard-dns.com", "adguard-dns.com",
     "dns.nextdns.io", "nextdns.io",
     "doh.cleanbrowsing.org",
@@ -217,7 +220,22 @@ def min_ttl(buf, default=60):
 # ---------------------------------------------------------------------------
 # Upstreams
 # ---------------------------------------------------------------------------
+def same_question(query, resp):
+    """True if the response answers exactly the question we asked (anti-spoofing)."""
+    try:
+        q = parse_question(query)
+        r = parse_question(resp)
+    except (DNSError, struct.error, IndexError):
+        return False
+    return q[2:5] == r[2:5] and resp[2] & 0x80   # name, type, class + QR bit
+
+
 class PlainUpstream:
+    """Classic DNS on port 53 (only used for a custom server, e.g. a Pi-hole at home).
+
+    Every query gets a fresh random ID and a fresh random source port; answers
+    are accepted only if ID and question match."""
+
     def __init__(self, servers):
         self.servers = [s.strip() for s in servers if s.strip()]
         if not self.servers:
@@ -227,82 +245,97 @@ class PlainUpstream:
                 ipaddress.ip_address(s)
             except ValueError:
                 raise ValueError("bad_custom_dns")
+        self.port = 53
 
     def _udp(self, srv, data):
         fam = socket.AF_INET6 if ":" in srv else socket.AF_INET
         with socket.socket(fam, socket.SOCK_DGRAM) as s:
             s.settimeout(2.0)
-            s.sendto(data, (srv, 53))
+            s.connect((srv, self.port))   # kernel drops datagrams from other addresses
+            s.send(data)
             deadline = time.monotonic() + 2.0
             while True:
-                resp, _ = s.recvfrom(4096)
-                if resp[:2] == data[:2]:
+                resp = s.recv(4096)
+                if resp[:2] == data[:2] and same_question(data, resp):
                     return resp
                 if time.monotonic() > deadline:
                     raise socket.timeout()
+                s.settimeout(max(0.05, deadline - time.monotonic()))
 
     def _tcp(self, srv, data):
-        with socket.create_connection((srv, 53), timeout=3.0) as s:
+        with socket.create_connection((srv, self.port), timeout=3.0) as s:
             s.sendall(struct.pack("!H", len(data)) + data)
             ln = struct.unpack("!H", _recv_exact(s, 2))[0]
-            return _recv_exact(s, ln)
+            resp = _recv_exact(s, ln)
+            if resp[:2] != data[:2] or not same_question(data, resp):
+                raise OSError("DNS answer does not match the question")
+            return resp
 
     def query(self, data, tcp=False):
+        orig_id = data[:2]
+        data = struct.pack("!H", secrets.randbits(16)) + data[2:]
         last = None
         for srv in self.servers:
             try:
                 if tcp:
-                    return self._tcp(srv, data)
-                resp = self._udp(srv, data)
-                if resp[2] & 0x02:  # truncated: retry over TCP
-                    return self._tcp(srv, data)
-                return resp
+                    resp = self._tcp(srv, data)
+                else:
+                    resp = self._udp(srv, data)
+                    if resp[2] & 0x02:  # truncated: retry over TCP
+                        resp = self._tcp(srv, data)
+                return orig_id + resp[2:]
             except OSError as e:
                 last = e
         raise last or OSError("DNS server unreachable")
 
 
 class DohUpstream:
-    """DNS-over-HTTPS (NextDNS) with a small connection pool."""
+    """DNS-over-HTTPS (RFC 8484) with certificate checking and a small keep-alive pool."""
 
-    def __init__(self, host, path, size=4):
-        self.host, self.path = host, path
+    def __init__(self, url, size=4):
+        u = urllib.parse.urlsplit(url)
+        if u.scheme != "https" or not u.hostname:
+            raise ValueError("bad DoH URL")
+        self.host, self.port = u.hostname, u.port or 443
+        self.path = u.path or "/dns-query"
+        self.ctx = ssl.create_default_context()      # verifies the server certificate
         self.pool = queue.LifoQueue()
         self.size = size
-        self.created = 0
-        self.lock = threading.Lock()
 
     def _conn(self):
         try:
             return self.pool.get_nowait()
         except queue.Empty:
-            return http.client.HTTPSConnection(self.host, 443, timeout=4.0)
+            return http.client.HTTPSConnection(self.host, self.port, timeout=5.0, context=self.ctx)
 
     def _post(self, conn, data):
         conn.request("POST", self.path, body=data, headers={
             "Content-Type": "application/dns-message",
             "Accept": "application/dns-message",
+            "User-Agent": "Tuxsitter",
         })
         r = conn.getresponse()
-        body = r.read()
+        body = r.read(65536)
         if r.status != 200:
             raise OSError("DoH HTTP %d" % r.status)
         return body
 
     def query(self, data, tcp=False):
         qid = data[:2]
-        data = b"\x00\x00" + data[2:]
+        data = b"\x00\x00" + data[2:]   # RFC 8484: ID 0 for better caching
         for attempt in range(2):
             conn = self._conn()
             try:
                 body = self._post(conn, data)
+                if not same_question(data, body):
+                    raise OSError("DoH answer does not match the question")
                 if self.pool.qsize() < self.size:
                     self.pool.put(conn)
                 else:
                     conn.close()
                 return qid + body[2:]
             except (OSError, http.client.HTTPException) as e:
-                conn.close()
+                conn.close()       # stale keep-alive connection -> retry once with a new one
                 if attempt:
                     raise OSError(str(e))
         raise OSError("DoH failed")
@@ -311,18 +344,18 @@ class DohUpstream:
 NEXTDNS_ID_RE = re.compile(r"^[A-Za-z0-9]{4,20}$")
 
 
-def make_upstream(dns_cfg, device="Linux"):
+def make_upstream(dns_cfg, device="Tuxsitter"):
     from common import PROVIDERS
     prov = dns_cfg.get("provider", "cloudflare")
+    if prov == "custom":
+        return PlainUpstream(dns_cfg.get("custom", "").replace(";", ",").split(","))
+    url = PROVIDERS.get(prov, PROVIDERS["cloudflare"])["doh"]
     if prov == "nextdns":
         pid = dns_cfg.get("nextdns_id", "").strip()
         if not NEXTDNS_ID_RE.match(pid):
             raise ValueError("bad_nextdns_id")
-        dev = re.sub(r"[^A-Za-z0-9-]", "-", device)[:30]
-        return DohUpstream("dns.nextdns.io", "/%s/%s" % (pid, dev))
-    if prov == "custom":
-        return PlainUpstream(dns_cfg.get("custom", "").replace(";", ",").split(","))
-    return PlainUpstream(PROVIDERS.get(prov, PROVIDERS["cloudflare"])["servers"])
+        url = url.format(id=pid, device=re.sub(r"[^A-Za-z0-9-]", "-", device)[:30])
+    return DohUpstream(url)
 
 
 # ---------------------------------------------------------------------------
@@ -409,6 +442,10 @@ def _recv_exact(s, n):
 # ---------------------------------------------------------------------------
 # Server
 # ---------------------------------------------------------------------------
+MAX_INFLIGHT = 256   # UDP queries being processed at the same time
+MAX_TCP = 32         # open DNS-over-TCP connections
+
+
 class DNSServer:
     """Listens on 127.0.0.1/::1, one port per child (UDP + TCP)."""
 
@@ -416,6 +453,9 @@ class DNSServer:
         self.filters = {}      # port -> ChildFilter
         self.sockets = {}      # port -> [sockets]
         self.pool = ThreadPoolExecutor(max_workers=48, thread_name_prefix="dns")
+        # limits, so a flood of queries cannot exhaust memory or threads
+        self.inflight = threading.BoundedSemaphore(MAX_INFLIGHT)
+        self.tcp_slots = threading.BoundedSemaphore(MAX_TCP)
         self.lock = threading.Lock()
         self.running = True
         self.wake_r, self.wake_w = socket.socketpair()
@@ -477,10 +517,15 @@ class DNSServer:
                 try:
                     if s.type == socket.SOCK_DGRAM:
                         data, addr = s.recvfrom(4096)
-                        self.pool.submit(self._udp_job, s, port, data, addr)
+                        if self.inflight.acquire(blocking=False):
+                            self.pool.submit(self._udp_job, s, port, data, addr)
+                        # else: overloaded -> drop, the client simply retries
                     else:
                         conn, _ = s.accept()
-                        self.pool.submit(self._tcp_job, conn, port)
+                        if self.tcp_slots.acquire(blocking=False):
+                            self.pool.submit(self._tcp_job, conn, port)
+                        else:
+                            conn.close()
                 except OSError:
                     pass
 
@@ -489,15 +534,16 @@ class DNSServer:
             return self.filters.get(port)
 
     def _udp_job(self, s, port, data, addr):
-        f = self._filter(port)
-        if not f:
-            return
-        resp = f.handle(data)
-        if resp:
-            try:
-                s.sendto(resp, addr)
-            except OSError:
-                pass
+        try:
+            f = self._filter(port)
+            resp = f.handle(data) if f else None
+            if resp:
+                try:
+                    s.sendto(resp, addr)
+                except OSError:
+                    pass
+        finally:
+            self.inflight.release()
 
     def _tcp_job(self, conn, port):
         conn.settimeout(10)
@@ -516,6 +562,7 @@ class DNSServer:
             pass
         finally:
             conn.close()
+            self.tcp_slots.release()
 
 
 class _FailFilter:

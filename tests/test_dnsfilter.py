@@ -93,3 +93,48 @@ class RulesetTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class UpstreamTests(unittest.TestCase):
+    def test_providers_use_encrypted_dns(self):
+        import common as C
+        for key in ("cloudflare", "cleanbrowsing", "adguard", "opendns"):
+            up = D.make_upstream({"provider": key})
+            self.assertIsInstance(up, D.DohUpstream)
+            self.assertTrue(C.PROVIDERS[key]["doh"].startswith("https://" + up.host))
+        up = D.make_upstream({"provider": "nextdns", "nextdns_id": "abc123"}, "Tuxsitter-emma")
+        self.assertEqual((up.host, up.path), ("dns.nextdns.io", "/abc123/Tuxsitter-emma"))
+        self.assertIsInstance(D.make_upstream({"provider": "custom", "custom": "192.168.1.2"}), D.PlainUpstream)
+
+    def test_plain_random_id_and_spoof_protection(self):
+        import socket
+        import threading
+        srv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        srv.bind(("127.0.0.1", 0))
+        seen = []
+
+        def serve():
+            data, addr = srv.recvfrom(512)
+            seen.append(data[:2])
+            good = D.build_response(data, 0, [(D.T_A, 60, b"\x01\x01\x01\x01")])
+            spoof_id = bytes([data[0] ^ 0xFF, data[1]]) + good[2:]
+            other_q = D.build_response(data[:2] + D.make_query("evil.example", D.T_A)[2:], 0,
+                                       [(D.T_A, 60, b"\x06\x06\x06\x06")])
+            for pkt in (spoof_id, other_q, good):
+                srv.sendto(pkt, addr)
+        threading.Thread(target=serve, daemon=True).start()
+        up = D.PlainUpstream(["127.0.0.1"])
+        up.port = srv.getsockname()[1]
+        resp = up.query(D.make_query("example.com", D.T_A, 0x1234))
+        srv.close()
+        self.assertEqual(resp[:2], b"\x12\x34")                     # original ID restored
+        self.assertNotEqual(seen[0], b"\x12\x34")                   # but a random ID was sent
+        self.assertEqual(D.parse_records(resp)[1][0][3], b"\x01\x01\x01\x01")   # spoofed answers ignored
+
+    def test_doh_rejects_mismatching_answer(self):
+        up = D.DohUpstream("https://doh.example/dns-query")
+        other = D.build_response(D.make_query("evil.example", D.T_A), 0, [(D.T_A, 60, b"\x06\x06\x06\x06")])
+        up._post = lambda conn, data: other
+        up._conn = lambda: type("C", (), {"close": lambda self: None})()
+        with self.assertRaises(OSError):
+            up.query(D.make_query("example.com", D.T_A, 7))
