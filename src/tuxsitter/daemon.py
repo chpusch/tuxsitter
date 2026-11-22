@@ -19,6 +19,7 @@ import threading
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import admin  # noqa: E402
 import common as C  # noqa: E402
 import dnsfilter  # noqa: E402
 
@@ -110,6 +111,7 @@ class Daemon:
         self.nft_ruleset = None
         self.dns = dnsfilter.DNSServer()
         self.client_slots = threading.BoundedSemaphore(32)
+        self.auth = admin.Authorizer()
         self.running = True
 
     # ---- configuration -----------------------------------------------------
@@ -372,7 +374,7 @@ class Daemon:
         conn.settimeout(5)
         try:
             cred = conn.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, struct.calcsize("3i"))
-            _, uid, _ = struct.unpack("3i", cred)
+            pid, uid, _ = struct.unpack("3i", cred)
             buf = b""
             while not buf.endswith(b"\n") and len(buf) < 65536:
                 chunk = conn.recv(4096)
@@ -380,7 +382,7 @@ class Daemon:
                     break
                 buf += chunk
             msg = json.loads(buf.decode() or "{}")
-            resp = self.handle(uid, msg)
+            resp = self.handle(uid, msg, pid)
         except Exception as e:  # noqa: BLE001
             log.debug("client error: %s", e)
             resp = {"ok": False, "error": "internal"}
@@ -391,7 +393,7 @@ class Daemon:
         conn.close()
         self.client_slots.release()
 
-    def handle(self, uid, msg):
+    def handle(self, uid, msg, pid=None):
         cmd = msg.get("cmd")
         try:
             me = pwd.getpwuid(uid).pw_name
@@ -428,29 +430,86 @@ class Daemon:
             self.grant(me, minutes)
             return {"ok": True}
 
-        # ---- everything below: root only (parent app) ----
-        if uid != 0:
-            return {"ok": False, "error": "forbidden"}
+        # ---- everything below: parent app (root, or authorized via polkit) ----
+        try:
+            return self.handle_admin(uid, me, msg, pid)
+        except admin.AdminError as e:
+            return {"ok": False, "error": str(e)}
+
+    def handle_admin(self, uid, me, msg, pid):
+        cmd = msg.get("cmd")
+        if cmd == "auth":
+            self.auth.authorize(pid, uid)         # shows the desktop's password dialog
+            return {"ok": True}
+        if not self.auth.is_authorized(pid, uid):
+            return {"ok": False, "error": "auth_required"}
+
         user = msg.get("user")
         if cmd == "status_all":
             with self.lock:
                 return {u: self.status(u) for u in self.cfg["children"]}
+        if cmd == "get_config":
+            with self.lock:
+                return {"ok": True, "config": admin.public_config(self.cfg), "me": me,
+                        "users": admin.candidate_users(exclude=me)}
+        if cmd == "set_config":
+            with self.lock:
+                cfg = admin.apply_settings(C.load_config(), msg.get("config"))
+                C.save_config(cfg)
+            self.reload_if_changed(force=True)
+            return {"ok": True}
+        if cmd == "set_pin":
+            pin = str(msg.get("pin", ""))
+            if not (pin.isdigit() and 4 <= len(pin) <= 8):
+                raise admin.AdminError("invalid")
+            with self.lock:
+                cfg = C.load_config()
+                cfg["pin"] = C.hash_pin(pin)
+                C.save_config(cfg)
+            self.reload_if_changed(force=True)
+            log.info("Parent PIN changed")
+            return {"ok": True}
+        if cmd in ("add_child", "create_account"):
+            if cmd == "create_account":
+                admin.create_account(user, msg.get("name"), msg.get("password"))
+            valid = {u["user"] for u in admin.candidate_users(exclude=me)}
+            if user not in valid:
+                raise admin.AdminError("invalid")
+            with self.lock:
+                cfg = C.load_config()
+                cfg["children"].setdefault(user, C.new_child_config())
+                C.save_config(cfg)
+            self.reload_if_changed(force=True)
+            log.info("Child added: %s", user)
+            return {"ok": True}
         if cmd == "reload":
             self.reload_if_changed(force=True)
             return {"ok": True}
         if cmd == "dnstest":
-            try:
-                return {"ok": True, "ms": dnsfilter.test_upstream(msg.get("dns", {}))}
-            except ValueError as e:
-                return {"ok": False, "error": str(e)}
-            except LookupError:
-                return {"ok": False, "error": "no_answer"}
-            except Exception as e:  # noqa: BLE001
-                return {"ok": False, "error": "no_answer", "detail": str(e)}
+            return admin.dns_test(msg.get("dns", {}))
+
+        # ---- commands for one child ----
         if user not in self.cfg["children"]:
             return {"ok": False, "error": "unknown_child"}
+        if cmd == "remove_child":
+            with self.lock:
+                cfg = C.load_config()
+                cfg["children"].pop(user, None)
+                C.save_config(cfg)
+            self.reload_if_changed(force=True)
+            log.info("Child removed: %s", user)
+            return {"ok": True}
+        if cmd == "remove_admin":
+            if user == me:
+                raise admin.AdminError("forbidden")
+            admin.remove_admin_rights(user)
+            return {"ok": True}
         if cmd == "grant":
-            self.grant(user, max(1, min(int(msg.get("minutes", 15)), 600)))
+            try:
+                minutes = int(msg.get("minutes", 15))
+            except (TypeError, ValueError):
+                raise admin.AdminError("invalid")
+            self.grant(user, max(1, min(minutes, 600)))
             return {"ok": True}
         if cmd == "lock":
             self.set_locked(user, bool(msg.get("on", True)))

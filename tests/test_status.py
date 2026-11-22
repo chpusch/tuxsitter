@@ -15,6 +15,8 @@ def make_daemon(child):
     d.state = {"usage": {}, "bonus": {}, "override": {}, "locked": {}}
     d.sessions, d.ending, d.pin_fail = {}, {}, {}
     d.save_state = lambda force=False: None
+    import admin
+    d.auth = admin.Authorizer("/bin/false")
     return d
 
 
@@ -74,7 +76,7 @@ class StatusTests(unittest.TestCase):
         for _ in range(3):
             self.assertEqual(d.handle(uid, {"cmd": "extra", "pin": "0000", "minutes": 30})["error"], "wrong_pin")
         self.assertEqual(d.handle(uid, {"cmd": "extra", "pin": "4711", "minutes": 30})["error"], "locked_out")
-        self.assertEqual(d.handle(uid, {"cmd": "grant", "user": name})["error"], "forbidden")
+        self.assertEqual(d.handle(uid, {"cmd": "grant", "user": name})["error"], "auth_required")
 
 
 class FormatTests(unittest.TestCase):

@@ -79,7 +79,7 @@ sudo apt install ./build/tuxsitter_*_all.deb
 ```
 
 Requirements (installed automatically with the package): `python3`, `python3-gi`, `gir1.2-gtk-3.0`,
-`nftables`, `pkexec`, `systemd`. Recommended: `gir1.2-xapp-1.0` (panel icon on Cinnamon) or
+`nftables`, `polkit`, `systemd`. Recommended: `gir1.2-xapp-1.0` (panel icon on Cinnamon) or
 `gir1.2-ayatanaappindicator3-0.1` (other desktops), and `gir1.2-notify-0.7`.
 
 ## Getting started
@@ -101,8 +101,14 @@ Tuxsitter has three parts:
 | Part | Runs as | Job |
 |---|---|---|
 | `tuxsitter.service` | root (systemd) | counts screen time, logs the child out, runs the DNS filter |
-| Parent app (`tuxsitter`) | root via pkexec | settings, extra time, history |
+| Parent app (`tuxsitter`) | **you** (no admin rights) | settings, extra time, history |
 | Panel indicator | the child | shows remaining time, warnings, PIN dialog |
+
+**Parent app and admin rights.** The parent app runs as your normal user - on X11 and Wayland.
+It cannot change anything by itself: every change is sent to the service, which first asks
+**polkit** (the desktop's own password dialog) whether you may manage Tuxsitter. Only someone who
+knows an administrator password gets through, so the child cannot. The service accepts only a fixed
+set of validated commands - there is no "run any command" backdoor.
 
 **Screen time.** Every 10 seconds the service asks `systemd-logind` whether the child is logged in and the
 screen is unlocked, and counts that time. When the limit or the allowed hours are reached, the child gets a

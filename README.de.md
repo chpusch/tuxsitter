@@ -85,8 +85,14 @@ Selbst bauen: `./tools/build-deb.sh` erzeugt `build/tuxsitter_<version>_all.deb`
 | Teil | läuft als | Aufgabe |
 |---|---|---|
 | `tuxsitter.service` | root (systemd) | zählt Zeit, meldet ab, betreibt den DNS-Filter |
-| Eltern-App (`tuxsitter`) | root über pkexec | Einstellungen, Extrazeit, Verlauf |
+| Eltern-App (`tuxsitter`) | **du** (ohne Admin-Rechte) | Einstellungen, Extrazeit, Verlauf |
 | Zeitanzeige im Panel | das Kind | Restzeit, Warnungen, PIN-Dialog |
+
+**Eltern-App und Admin-Rechte:** Die Eltern-App läuft als dein normaler Benutzer – unter X11 und
+Wayland. Selbst ändern kann sie nichts: Jede Änderung geht an den Dienst, der vorher über **polkit**
+(den Passwortdialog deines Desktops) prüft, ob du Tuxsitter verwalten darfst. Durch kommt nur, wer ein
+Administrator-Passwort kennt – das Kind also nicht. Der Dienst nimmt nur fest definierte, geprüfte
+Befehle an.
 
 **Bildschirmzeit:** Alle 10 Sekunden fragt der Dienst `systemd-logind`, ob das Kind angemeldet und der
 Bildschirm entsperrt ist, und zählt diese Zeit. Ist das Limit oder die Uhrzeit erreicht, läuft eine

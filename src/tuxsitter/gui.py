@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-"""Tuxsitter - parent app (runs as root via pkexec)."""
+"""Tuxsitter - parent app.
+
+Runs as the normal (parent) user - on X11 and Wayland. Every change goes to the root
+daemon, which first checks with polkit that the parent is allowed to manage Tuxsitter."""
 import grp
 import os
 import pwd
@@ -90,9 +93,10 @@ def real_name(user):
 
 
 def invoking_user():
-    uid = os.environ.get("PKEXEC_UID") or os.environ.get("SUDO_UID")
+    """The parent running this app (or the pkexec caller when started as root)."""
+    uid = os.environ.get("PKEXEC_UID") or os.environ.get("SUDO_UID") if os.geteuid() == 0 else os.getuid()
     try:
-        return pwd.getpwuid(int(uid)).pw_name if uid else None
+        return pwd.getpwuid(int(uid)).pw_name if uid is not None else None
     except (KeyError, ValueError):
         return None
 
@@ -152,32 +156,25 @@ def info(parent, title, text, error=False):
     d.destroy()
 
 
-def open_url_as_user(parent, url):
-    """Open a link in the parent's own browser - never start a browser as root."""
-    user = invoking_user()
+def open_url(parent, url):
     try:
-        uid = pwd.getpwnam(user).pw_uid if user else None
-    except KeyError:
-        uid = None
-    if uid is not None:
-        env = ["DISPLAY=" + os.environ.get("DISPLAY", ":0"),
-               "XDG_RUNTIME_DIR=/run/user/%d" % uid,
-               "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%d/bus" % uid]
-        if os.environ.get("XAUTHORITY"):
-            env.append("XAUTHORITY=" + os.environ["XAUTHORITY"])
-        try:
-            subprocess.Popen(["runuser", "-u", user, "--", "env"] + env + ["xdg-open", url],
-                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            return
-        except OSError:
-            pass
+        Gtk.show_uri_on_window(parent, url, Gtk.get_current_event_time())
+        return
+    except GLib.Error:
+        pass
     Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD).set_text(url, -1)
     info(parent, _("Link copied"), _("Open this address in your browser:") + "\n" + url)
 
 
 def daemon_call(msg, timeout=5):
+    """Send a command to the service. If the authorization ran out, ask polkit again once."""
     try:
-        return C.request(msg, timeout=timeout)
+        r = C.request(msg, timeout=timeout)
+        if r and r.get("error") == "auth_required" and msg.get("cmd") != "auth":
+            a = C.request({"cmd": "auth"}, timeout=300)
+            if a and a.get("ok"):
+                r = C.request(msg, timeout=timeout)
+        return r
     except (OSError, ValueError):
         return None
 
@@ -335,18 +332,6 @@ def _user_exists(u):
         return False
 
 
-def create_account(user, name, password):
-    if os.path.exists("/usr/sbin/adduser"):
-        cmd = ["adduser", "--disabled-password", "--gecos", name or user, user]
-    else:
-        cmd = ["useradd", "-m", "-s", "/bin/bash", "-c", name or user, user]
-    r = subprocess.run(cmd, capture_output=True, text=True)
-    if r.returncode != 0:
-        raise RuntimeError(r.stderr.strip() or _("The account could not be created."))
-    r = subprocess.run(["chpasswd"], input="%s:%s\n" % (user, password), capture_output=True, text=True)
-    if r.returncode != 0:
-        raise RuntimeError(r.stderr.strip() or _("The password could not be set."))
-
 
 # ---------------------------------------------------------------------------
 # History chart
@@ -425,7 +410,9 @@ class MainWindow(Gtk.ApplicationWindow):
         super().__init__(application=app, title=C.APP_NAME)
         self.set_default_size(920, 640)
         self.set_icon_name("tuxsitter")
-        self.cfg = C.load_config()
+        self.cfg = None
+        self.me = invoking_user()
+        self.load_config_from_daemon()
         self.status = {}
         self.cur = None
         self._save_id = None
@@ -501,7 +488,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.show_all()
         self.refresh_status()
         GLib.timeout_add_seconds(5, self.refresh_status)
-        if not self.cfg.get("pin"):
+        if not self.cfg.get("pin_set"):
             GLib.idle_add(self.first_pin)
         self.start_update_check()
 
@@ -947,14 +934,23 @@ class MainWindow(Gtk.ApplicationWindow):
         self.hb.set_subtitle(_("Saving…"))
         self._save_id = GLib.timeout_add(600, self.do_save)
 
+    def load_config_from_daemon(self):
+        r = daemon_call({"cmd": "get_config"})
+        if r and r.get("ok"):
+            self.cfg = r["config"]
+            self.me = r.get("me") or self.me
+        elif self.cfg is None:
+            self.cfg = {"children": {}, "pin_set": True, "update_check": True}
+
     def do_save(self):
         self._save_id = None
-        try:
-            C.save_config(self.cfg)
-        except OSError as e:
-            info(self, _("Saving failed"), str(e), error=True)
+        r = daemon_call({"cmd": "set_config", "config": {
+            "children": self.cfg["children"], "update_check": self.cfg.get("update_check", True)}},
+            timeout=15)
+        if not r or not r.get("ok"):
+            self.hb.set_subtitle(None)
+            info(self, _("Saving failed"), C.error_text(r), error=True)
             return False
-        daemon_call({"cmd": "reload"}, timeout=10)
         self.hb.set_subtitle(_("Saved") + " ✓")
         GLib.timeout_add_seconds(3, lambda: self.hb.set_subtitle(None) or False)
         self.refresh_status()
@@ -996,6 +992,7 @@ class MainWindow(Gtk.ApplicationWindow):
         return True
 
     def on_start_daemon(self, *_args):
+        # systemd asks for the admin password itself (polkit)
         subprocess.run(["systemctl", "enable", "--now", "tuxsitter.service"])
         GLib.timeout_add(1500, lambda: self.refresh_status() and False)
 
@@ -1003,8 +1000,7 @@ class MainWindow(Gtk.ApplicationWindow):
     def first_pin(self):
         d = PinDialog(self, first=True)
         if d.run() == Gtk.ResponseType.OK:
-            self.cfg["pin"] = C.hash_pin(d.pin())
-            self.do_save()
+            self.save_pin(d.pin())
         d.destroy()
         if not self.cfg["children"]:
             self.on_add_child()
@@ -1013,9 +1009,17 @@ class MainWindow(Gtk.ApplicationWindow):
     def on_change_pin(self, *_args):
         d = PinDialog(self)
         if d.run() == Gtk.ResponseType.OK:
-            self.cfg["pin"] = C.hash_pin(d.pin())
-            self.do_save()
+            self.save_pin(d.pin())
         d.destroy()
+
+    def save_pin(self, pin):
+        r = daemon_call({"cmd": "set_pin", "pin": pin})
+        if r and r.get("ok"):
+            self.cfg["pin_set"] = True
+            self.hb.set_subtitle(_("Saved") + " ✓")
+            GLib.timeout_add_seconds(3, lambda: self.hb.set_subtitle(None) or False)
+        else:
+            info(self, _("Saving failed"), C.error_text(r), error=True)
 
     def on_add_child(self, *_args):
         d = AddChildDialog(self, self.cfg["children"])
@@ -1026,13 +1030,13 @@ class MainWindow(Gtk.ApplicationWindow):
             return
         kind, user, name, pw = res
         if kind == "new":
-            try:
-                create_account(user, name, pw)
-            except RuntimeError as e:
-                info(self, _("The account could not be created."), str(e), error=True)
-                return
-        self.cfg["children"][user] = C.new_child_config()
-        self.do_save()
+            r = daemon_call({"cmd": "create_account", "user": user, "name": name, "password": pw}, timeout=60)
+        else:
+            r = daemon_call({"cmd": "add_child", "user": user})
+        if not r or not r.get("ok"):
+            info(self, _("Error"), C.error_text(r), error=True)
+            return
+        self.load_config_from_daemon()
         self.fill_sidebar(select=user)
         if admin_groups_of(user):
             self.on_remove_admin(user)
@@ -1045,8 +1049,9 @@ class MainWindow(Gtk.ApplicationWindow):
                    _("{name} will no longer be able to install programs or switch off the protection. "
                      "Takes effect at the next login.").format(name=real_name(user)), _("Remove rights")):
             return
-        for g in admin_groups_of(user):
-            subprocess.run(["gpasswd", "-d", user, g], capture_output=True)
+        r = daemon_call({"cmd": "remove_admin", "user": user})
+        if not r or not r.get("ok"):
+            info(self, _("Error"), C.error_text(r), error=True)
         self.refresh_status()
 
     def on_remove_child(self, user):
@@ -1054,9 +1059,12 @@ class MainWindow(Gtk.ApplicationWindow):
                    _("Time limits and the internet filter will no longer apply. The user account itself is kept."),
                    _("Remove"), destructive=True):
             return
-        self.cfg["children"].pop(user, None)
+        r = daemon_call({"cmd": "remove_child", "user": user})
+        if not r or not r.get("ok"):
+            info(self, _("Error"), C.error_text(r), error=True)
+            return
         self.cur = None
-        self.do_save()
+        self.load_config_from_daemon()
         self.fill_sidebar()
 
     # ---- Update hint -------------------------------------------------------
@@ -1080,7 +1088,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
     def on_update_response(self, bar, resp):
         if resp == 1 and self.update_url:
-            open_url_as_user(self, self.update_url)
+            open_url(self, self.update_url)
         bar.hide()
 
     def on_toggle_updates(self, item):
@@ -1105,8 +1113,38 @@ class App(Gtk.Application):
         super().__init__(application_id=C.APP_ID)
 
     def do_activate(self):
-        win = self.get_active_window() or MainWindow(self)
+        win = self.get_active_window()
+        if win is None:
+            if not connect_and_authorize():
+                self.quit()
+                return
+            win = MainWindow(self)
         win.present()
+
+
+def connect_and_authorize():
+    """Ask the service for permission (polkit shows the desktop's password dialog).
+    Returns True when the parent app may continue."""
+    for attempt in range(2):
+        try:
+            r = C.request({"cmd": "auth"}, timeout=300)
+        except (OSError, ValueError):
+            r = None
+        if r is None:
+            if attempt == 0 and ask(None, _("The Tuxsitter service is not running"),
+                                    _("Start it now? Your password will be requested."), _("Start service")):
+                subprocess.run(["systemctl", "enable", "--now", "tuxsitter.service"])
+                time.sleep(2)
+                continue
+            if attempt:
+                info(None, _("Error"), C.error_text(None), error=True)
+            return False
+        if r.get("ok"):
+            return True
+        if r.get("error") != "auth_failed":       # dismissed dialogs need no extra message
+            info(None, _("Error"), C.error_text(r), error=True)
+        return False
+    return False
 
 
 def arg(argv, flag):
@@ -1128,7 +1166,8 @@ def apply_theme(argv):
         s.set_property("gtk-application-prefer-dark-theme", True)
 
 
-LOG_FILE = "/var/log/tuxsitter-gui.log"
+CACHE_DIR = os.path.join(os.environ.get("XDG_CACHE_HOME") or os.path.expanduser("~/.cache"), "tuxsitter")
+LOG_FILE = os.path.join(CACHE_DIR, "gui.log")
 _in_error_dialog = False
 
 
@@ -1138,6 +1177,7 @@ def excepthook(exc_type, exc, tb):
     text = "".join(traceback.format_exception(exc_type, exc, tb))
     sys.stderr.write(text)
     try:
+        os.makedirs(CACHE_DIR, exist_ok=True)
         with open(LOG_FILE, "a", encoding="utf-8") as f:
             f.write("%s Tuxsitter %s\n%s\n" % (time.strftime("%Y-%m-%d %H:%M:%S"), C.VERSION, text))
     except OSError:
@@ -1158,8 +1198,6 @@ def excepthook(exc_type, exc, tb):
 
 
 def main():
-    if os.geteuid() != 0:
-        os.execvp("pkexec", ["pkexec", os.path.abspath(__file__)] + sys.argv[1:])
     lang = arg(sys.argv, "--lang")
     if lang:
         i18n.setup(lang)

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 - 2026-11-22
+
+The parent app no longer runs as root.
+
+- **Works on Wayland and X11**: the parent app now runs as your normal user. Graphical programs
+  running as root are often blocked on Wayland - this problem is gone.
+- **More secure**: only the small background service has admin rights. The parent app asks it to make
+  changes; the service checks with **polkit** (the desktop's own password dialog) that you may manage
+  Tuxsitter, and accepts only a fixed set of validated commands.
+- The password is asked once when the app opens (polkit remembers it for a few minutes; the app's
+  session ends when you close it).
+- The PIN hash never leaves the service; settings are validated before they are saved.
+- Error log and update cache moved to `~/.cache/tuxsitter/`.
+
 ## 0.2.2 - 2026-11-21
 
 Security and privacy hardening of the DNS filter.

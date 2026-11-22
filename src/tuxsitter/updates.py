@@ -3,6 +3,7 @@
 Only one anonymous request to the public GitHub API is made - no ID, no statistics.
 """
 import json
+import os
 import re
 import time
 import urllib.request
@@ -10,7 +11,8 @@ import urllib.request
 import common as C
 
 API_URL = "https://api.github.com/repos/chpusch/tuxsitter/releases?per_page=10"
-CACHE_FILE = C.STATE_DIR + "/update.json"
+CACHE_FILE = os.path.join(os.environ.get("XDG_CACHE_HOME") or os.path.expanduser("~/.cache"),
+                          "tuxsitter", "update.json")   # per user - the parent app runs as a normal user
 INTERVAL = 24 * 3600
 
 

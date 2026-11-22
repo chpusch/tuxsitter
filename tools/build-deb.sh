@@ -11,7 +11,7 @@ mkdir -p "$PKG/DEBIAN" "$PKG/usr/lib/tuxsitter" "$PKG/usr/bin" \
          "$PKG/etc/xdg/autostart" "$PKG/usr/share/polkit-1/actions" \
          "$PKG/usr/share/icons/hicolor/scalable/apps" "$PKG/usr/share/doc/tuxsitter"
 
-install -m 644 src/tuxsitter/common.py src/tuxsitter/i18n.py src/tuxsitter/dnsfilter.py src/tuxsitter/updates.py "$PKG/usr/lib/tuxsitter/"
+install -m 644 src/tuxsitter/admin.py src/tuxsitter/common.py src/tuxsitter/i18n.py src/tuxsitter/dnsfilter.py src/tuxsitter/updates.py "$PKG/usr/lib/tuxsitter/"
 install -m 755 src/tuxsitter/check_providers.py "$PKG/usr/lib/tuxsitter/"
 install -m 755 src/tuxsitter/daemon.py src/tuxsitter/gui.py src/tuxsitter/tray.py "$PKG/usr/lib/tuxsitter/"
 install -m 755 data/tuxsitter.sh "$PKG/usr/bin/tuxsitter"

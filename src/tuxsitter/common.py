@@ -13,7 +13,7 @@ from i18n import _, N_
 
 APP_NAME = "Tuxsitter"
 APP_ID = "io.github.chpusch.Tuxsitter"
-VERSION = "0.2.2"
+VERSION = "0.3.0"
 HOMEPAGE = "https://github.com/chpusch/tuxsitter"
 
 CONFIG_DIR = os.environ.get("TUXSITTER_CONFIG_DIR", "/etc/tuxsitter")
@@ -235,6 +235,12 @@ ERRORS = {
     "bad_nextdns_id": N_("Invalid NextDNS profile ID."),
     "bad_custom_dns": N_("Invalid DNS server address."),
     "no_answer": N_("The filter did not return an address."),
+    "auth_required": N_("Please confirm with your password first."),
+    "auth_failed": N_("Authentication failed."),
+    "auth_unavailable": N_("The password check (polkit) is not available on this system."),
+    "bad_username": N_("Invalid or already existing username."),
+    "bad_password": N_("The password must have at least 4 characters."),
+    "account_failed": N_("The account could not be created."),
 }
 
 
