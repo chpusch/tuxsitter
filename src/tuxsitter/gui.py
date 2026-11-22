@@ -447,6 +447,13 @@ class MainWindow(Gtk.ApplicationWindow):
         self.daemon_bar.connect("response", self.on_start_daemon)
         self.daemon_bar.set_no_show_all(True)
         outer.pack_start(self.daemon_bar, False, False, 0)
+        self.dns_bar = Gtk.InfoBar(message_type=Gtk.MessageType.WARNING)
+        self.dns_bar.get_content_area().add(label(
+            _("The internet filter service is not running - children with the filter have no internet right now.")))
+        self.dns_bar.add_button(_("Start service"), 1)
+        self.dns_bar.connect("response", self.on_start_dns)
+        self.dns_bar.set_no_show_all(True)
+        outer.pack_start(self.dns_bar, False, False, 0)
         self.update_bar = Gtk.InfoBar(message_type=Gtk.MessageType.INFO, show_close_button=True)
         self.update_label = label("")
         self.update_bar.get_content_area().add(self.update_label)
@@ -856,6 +863,11 @@ class MainWindow(Gtk.ApplicationWindow):
         opt.add(setting_row(_("Block workarounds"), bp,
                             _("Blocks encrypted DNS (DoH/DoT) of other providers and the Tor download, "
                               "so the filter cannot be bypassed.")))
+        bl = Gtk.Switch(active=bool(self.cfg.get("browser_doh_lock", True)))
+        bl.connect("notify::active", lambda s, _pspec: self.set_val(self.cfg, "browser_doh_lock", s.get_active()))
+        opt.add(setting_row(_("Lock DNS settings in browsers"), bl,
+                            _("Firefox, Chrome, Chromium, Brave, Edge and Vivaldi can no longer use their own DNS. "
+                              "Applies to all accounts on this computer - for you nothing changes in practice.")))
         inner.pack_start(opt, False, False, 0)
 
         def on_en(s, _pspec):
@@ -945,7 +957,8 @@ class MainWindow(Gtk.ApplicationWindow):
     def do_save(self):
         self._save_id = None
         r = daemon_call({"cmd": "set_config", "config": {
-            "children": self.cfg["children"], "update_check": self.cfg.get("update_check", True)}},
+            "children": self.cfg["children"], "update_check": self.cfg.get("update_check", True),
+            "browser_doh_lock": self.cfg.get("browser_doh_lock", True)}},
             timeout=15)
         if not r or not r.get("ok"):
             self.hb.set_subtitle(None)
@@ -971,6 +984,13 @@ class MainWindow(Gtk.ApplicationWindow):
         else:
             self.daemon_bar.hide()
             self.status = r
+        h = daemon_call({"cmd": "health"}) if r is not None else None
+        age = (h or {}).get("dns_proxy_age")
+        if h and h.get("ok") and h.get("dns_needed") and (age is None or age > 20):
+            self.dns_bar.show()
+            self.dns_bar.show_all()
+        else:
+            self.dns_bar.hide()
         for user, row in self.side_rows.items():
             st = self.status.get(user, {})
             if not self.cfg["children"][user].get("enabled", True):
@@ -995,6 +1015,10 @@ class MainWindow(Gtk.ApplicationWindow):
         # systemd asks for the admin password itself (polkit)
         subprocess.run(["systemctl", "enable", "--now", "tuxsitter.service"])
         GLib.timeout_add(1500, lambda: self.refresh_status() and False)
+
+    def on_start_dns(self, *_args):
+        subprocess.run(["systemctl", "restart", "tuxsitter-dns.service"])
+        GLib.timeout_add(4000, lambda: self.refresh_status() and False)
 
     # ---- Actions -------------------------------------------------------
     def first_pin(self):

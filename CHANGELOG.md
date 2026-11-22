@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.0 - 2026-11-22
+
+Tighter and more secure internet filter.
+
+- 🔒 **DNS filter runs without any rights**: it is now a separate service (`tuxsitter-dns.service`) under a
+  temporary user created by systemd (`DynamicUser`) in a locked-down sandbox. Even a bug in the DNS code
+  could not harm the system. Only the service with the right systemd cgroup receives the filter settings.
+- 🚪 **Sibling loophole closed**: each child's filter port can only be used by that child.
+- 🌐 **Browsers' own DNS locked** (new option, on by default): Firefox, Chrome, Chromium, Brave, Edge and
+  Vivaldi can no longer bypass the filter with their own DNS-over-HTTPS setting. An existing Firefox
+  `policies.json` is kept and restored on uninstall.
+- 📏 Large DNS answers are now truncated correctly for UDP (the system retries over TCP).
+- ⚡ More reused connections to the filter provider.
+- ⚠️ The parent app warns when the DNS filter service is not running.
+- CleanBrowsing is now described as "recommended for older children" (it also blocks bypass methods).
+- Robustness tests (fuzzing) run automatically with every change.
+
 ## 0.3.0 - 2026-11-22
 
 The parent app no longer runs as root.

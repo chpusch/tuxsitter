@@ -1,0 +1,40 @@
+[Unit]
+Description=Tuxsitter DNS filter (unprivileged)
+Documentation=https://github.com/chpusch/tuxsitter
+After=network.target tuxsitter.service
+PartOf=tuxsitter.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -B /usr/lib/tuxsitter/dnsproxy.py
+Restart=always
+RestartSec=2
+
+# Runs under a temporary user that systemd creates on start and removes on stop.
+DynamicUser=yes
+# Locked-down sandbox: even a bug in the DNS code could not do anything else.
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectProc=invisible
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

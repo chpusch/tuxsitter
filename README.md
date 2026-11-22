@@ -38,6 +38,7 @@ Parents get one simple window; the child sees how much time is left in the panel
   - enforced **SafeSearch** for Google, Bing and DuckDuckGo
   - **YouTube Restricted Mode** (moderate or strict)
   - **blocks the usual workarounds**: DNS-over-HTTPS / DNS-over-TLS of other providers, hard-coded public resolvers, the Tor download
+  - **locks the DNS setting of installed browsers** (Firefox, Chrome, Chromium, Brave, Edge, Vivaldi)
 - 📊 **History** of the last 14 days
 - 🛡 **Tamper resistant** - runs as a system service; a child without admin rights cannot stop it.
   Tuxsitter warns you if the child's account has admin rights and can remove them.
@@ -100,7 +101,8 @@ Tuxsitter has three parts:
 
 | Part | Runs as | Job |
 |---|---|---|
-| `tuxsitter.service` | root (systemd) | counts screen time, logs the child out, runs the DNS filter |
+| `tuxsitter.service` | root (systemd) | counts screen time, logs the child out, sets the firewall rules |
+| `tuxsitter-dns.service` | a temporary user without any rights, in a sandbox (systemd `DynamicUser`) | the DNS filter |
 | Parent app (`tuxsitter`) | **you** (no admin rights) | settings, extra time, history |
 | Panel indicator | the child | shows remaining time, warnings, PIN dialog |
 
@@ -152,6 +154,10 @@ No parental control is perfect. Things to be aware of:
 
 - A determined teenager with physical access may find ways around it (live USB stick, other device,
   VPNs not known to the filter provider). Talking about the rules helps more than any software.
+- **Unknown encrypted-DNS servers:** DNS-over-HTTPS looks like normal web traffic. Tuxsitter blocks the
+  well-known DoH servers and locks the DNS setting of installed browsers, but a browser the child installs
+  itself (e.g. a Flatpak) could use a small, unknown DoH server. **CleanBrowsing Family** (or NextDNS with
+  "Block bypass methods") also blocks such servers - recommended for older, tech-savvy children.
 - The DNS filter blocks domains, not individual pages.
 - Time is counted per computer. Multiple computers each need Tuxsitter.
 - Roughly tested on Linux Mint (Cinnamon) only. Other desktops should work; the panel icon needs
@@ -170,7 +176,7 @@ The firewall rules are removed automatically.
 
 ```sh
 python3 /usr/lib/tuxsitter/check_providers.py   # live test of all filter providers
-systemctl status tuxsitter            # is the service running?
+systemctl status tuxsitter tuxsitter-dns   # are both services running?
 journalctl -u tuxsitter -f            # log
 sudo nft list table inet tuxsitter    # current firewall rules
 ```

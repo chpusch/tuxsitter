@@ -2,7 +2,8 @@
 """Tuxsitter background service (runs as root via systemd).
 
 * tracks screen time of child accounts and logs them out when time is up
-* runs the per-account DNS filter and keeps the nftables rules in place
+* keeps the nftables rules for the per-account DNS filter in place; the filter itself
+  runs as a separate, unprivileged process (dnsproxy.py / tuxsitter-dns.service)
 * answers the parent app and the child's panel indicator on a UNIX socket
 """
 import grp
@@ -20,6 +21,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import admin  # noqa: E402
+import browserpolicy  # noqa: E402
 import common as C  # noqa: E402
 import dnsfilter  # noqa: E402
 
@@ -91,6 +93,16 @@ def sessions_by_user():
     return out
 
 
+def is_dns_proxy(pid):
+    """True if the process belongs to tuxsitter-dns.service (checked via its cgroup,
+    which only systemd can set)."""
+    try:
+        with open("/proc/%d/cgroup" % pid) as f:
+            return any(line.rstrip().endswith("/tuxsitter-dns.service") for line in f)
+    except (OSError, TypeError):
+        return False
+
+
 # ---------------------------------------------------------------------------
 # Daemon
 # ---------------------------------------------------------------------------
@@ -100,7 +112,7 @@ class Daemon:
         self.cfg = C.load_config()
         self.cfg_mtime = self._mtime()
         self.state = C.load_json(C.STATE_FILE, {})
-        for k in ("usage", "bonus", "override", "locked"):
+        for k in ("usage", "bonus", "override", "locked", "browser_policy"):
             self.state.setdefault(k, {})
         self.sessions = {}
         self.ending = {}         # user -> logout timestamp
@@ -109,7 +121,8 @@ class Daemon:
         self.last_save = 0
         self.last_nft_check = 0
         self.nft_ruleset = None
-        self.dns = dnsfilter.DNSServer()
+        self.dns_wanted = {}       # port -> (user, dns settings), served to the DNS filter process
+        self.proxy_seen = 0        # last time the unprivileged DNS filter asked for its settings
         self.client_slots = threading.BoundedSemaphore(32)
         self.auth = admin.Authorizer()
         self.running = True
@@ -129,6 +142,14 @@ class Daemon:
                 self.cfg = C.load_config()
             log.info("Configuration loaded (%d children)", len(self.cfg["children"]))
             self.apply_dns()
+            self.apply_browser_policy()
+
+    def apply_browser_policy(self):
+        """Lock the browsers' own DNS setting (only while children are configured)."""
+        want = bool(self.cfg.get("browser_doh_lock", True) and self.children())
+        with self.lock:
+            browserpolicy.apply(want, self.state["browser_policy"])
+        self.save_state(force=True)
 
     def children(self):
         """[(user, cfg)] of enabled children whose account exists."""
@@ -149,7 +170,7 @@ class Daemon:
                 continue
             wanted[port] = (user, d)
             entries.append((uid, port, bool(d.get("block_bypass", True))))
-        self.dns.update(wanted)
+        self.dns_wanted = wanted
         rules = dnsfilter.build_ruleset(entries) if entries else dnsfilter.EMPTY_RULESET
         self._nft(rules)
         self.nft_ruleset = rules
@@ -430,6 +451,14 @@ class Daemon:
             self.grant(me, minutes)
             return {"ok": True}
 
+        if cmd == "dns_config":
+            # only for the unprivileged DNS filter process started by systemd
+            if uid != 0 and not is_dns_proxy(pid):
+                return {"ok": False, "error": "forbidden"}
+            self.proxy_seen = time.time()
+            with self.lock:
+                return {"ok": True, "children": {str(port): [u, d] for port, (u, d) in self.dns_wanted.items()}}
+
         # ---- everything below: parent app (root, or authorized via polkit) ----
         try:
             return self.handle_admin(uid, me, msg, pid)
@@ -485,6 +514,9 @@ class Daemon:
         if cmd == "reload":
             self.reload_if_changed(force=True)
             return {"ok": True}
+        if cmd == "health":
+            age = time.time() - self.proxy_seen if self.proxy_seen else None
+            return {"ok": True, "dns_needed": bool(self.dns_wanted), "dns_proxy_age": age}
         if cmd == "dnstest":
             return admin.dns_test(msg.get("dns", {}))
 
@@ -542,8 +574,15 @@ class Daemon:
 
 
 def cleanup():
-    """On uninstall: remove our firewall table."""
+    """On uninstall: remove our firewall table and browser policies."""
     subprocess.run(["nft", "delete", "table", "inet", dnsfilter.NFT_TABLE], capture_output=True)
+    state = C.load_json(C.STATE_FILE, {})
+    browserpolicy.disable(state.get("browser_policy", {}))
+    state["browser_policy"] = {}
+    try:
+        C.save_json(C.STATE_FILE, state, 0o600)
+    except OSError:
+        pass
 
 
 def main():

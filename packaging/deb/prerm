@@ -2,7 +2,7 @@
 set -e
 if [ "$1" = "remove" ] || [ "$1" = "deconfigure" ]; then
   if [ -d /run/systemd/system ]; then
-    systemctl disable --now tuxsitter.service >/dev/null 2>&1 || true
+    systemctl disable --now tuxsitter-dns.service tuxsitter.service >/dev/null 2>&1 || true
   fi
   /usr/bin/python3 -B /usr/lib/tuxsitter/daemon.py --cleanup || true
 fi

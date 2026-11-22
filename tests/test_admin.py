@@ -117,3 +117,47 @@ class SettingsTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DnsProxyEndpointTests(unittest.TestCase):
+    def test_only_the_dns_service_gets_the_filter_settings(self):
+        d = make_daemon()
+        d.dns_wanted = {21001: ("kid", {"provider": "nextdns", "nextdns_id": "abc123"})}
+        d.proxy_seen = 0
+        # an ordinary process (here: the test itself) is not tuxsitter-dns.service
+        self.assertEqual(d.handle(UID, {"cmd": "dns_config"}, ME)["error"], "forbidden")
+        r = d.handle(0, {"cmd": "dns_config"}, ME)
+        self.assertEqual(r["children"], {"21001": ["kid", {"provider": "nextdns", "nextdns_id": "abc123"}]})
+        self.assertGreater(d.proxy_seen, 0)
+
+    def test_cgroup_check(self):
+        self.assertFalse(Dm.is_dns_proxy(ME))
+        self.assertFalse(Dm.is_dns_proxy(None))
+
+
+class BrowserPolicyTests(unittest.TestCase):
+    def test_enable_merge_and_restore(self):
+        import json
+        import browserpolicy as B
+        root = tempfile.mkdtemp()
+        old = (B.FIREFOX, B.CHROMIUM_DIRS)
+        try:
+            B.FIREFOX = os.path.join(root, "firefox", "policies.json")
+            B.CHROMIUM_DIRS = [os.path.join(root, "chrome")]
+            os.makedirs(os.path.dirname(B.FIREFOX))
+            original = json.dumps({"policies": {"DisableTelemetry": True}})
+            with open(B.FIREFOX, "w") as f:
+                f.write(original)
+            state = {}
+            B.apply(True, state)
+            pol = json.load(open(B.FIREFOX))["policies"]
+            self.assertEqual(pol["DNSOverHTTPS"], {"Enabled": False, "Locked": True})
+            self.assertTrue(pol["DisableTelemetry"])                      # existing policy kept
+            self.assertEqual(json.load(open(os.path.join(root, "chrome", "tuxsitter.json"))),
+                             {"DnsOverHttpsMode": "off"})
+            B.apply(True, state)                                          # idempotent
+            B.apply(False, state)
+            self.assertEqual(open(B.FIREFOX).read(), original)            # restored exactly
+            self.assertFalse(os.path.exists(os.path.join(root, "chrome", "tuxsitter.json")))
+        finally:
+            B.FIREFOX, B.CHROMIUM_DIRS = old

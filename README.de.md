@@ -37,6 +37,7 @@ einfaches Fenster, das Kind sieht im Panel, wie viel Zeit noch übrig ist.
     OpenDNS FamilyShield, **eigenes NextDNS-Profil** oder eigener Server (z. B. Pi-hole)
   - **SafeSearch** erzwungen für Google, Bing und DuckDuckGo
   - **YouTube eingeschränkter Modus** (moderat oder streng)
+  - **DNS-Einstellung der Browser gesperrt** (Firefox, Chrome, Chromium, Brave, Edge, Vivaldi)
   - **Typische Tricks gesperrt**: verschlüsseltes DNS (DoH/DoT) fremder Anbieter, fest eingetragene
     öffentliche DNS-Server, der Tor-Download
 - 📊 **Verlauf** der letzten 14 Tage
@@ -84,7 +85,8 @@ Selbst bauen: `./tools/build-deb.sh` erzeugt `build/tuxsitter_<version>_all.deb`
 
 | Teil | läuft als | Aufgabe |
 |---|---|---|
-| `tuxsitter.service` | root (systemd) | zählt Zeit, meldet ab, betreibt den DNS-Filter |
+| `tuxsitter.service` | root (systemd) | zählt Zeit, meldet ab, setzt die Firewall-Regeln |
+| `tuxsitter-dns.service` | ein temporärer Benutzer ohne Rechte, abgeschottet (systemd `DynamicUser`) | der DNS-Filter |
 | Eltern-App (`tuxsitter`) | **du** (ohne Admin-Rechte) | Einstellungen, Extrazeit, Verlauf |
 | Zeitanzeige im Panel | das Kind | Restzeit, Warnungen, PIN-Dialog |
 
@@ -124,6 +126,12 @@ ungefiltertem Internet. Deine eigenen Konten fragen weiter ganz normal deinen Ro
 Keine Kindersicherung ist perfekt: Mit Live-USB-Stick, einem anderen Gerät oder einem dem Filter
 unbekannten VPN kommt ein entschlossener Teenager eventuell vorbei. Der DNS-Filter sperrt ganze Domains,
 keine einzelnen Seiten. Reden hilft mehr als jede Software.
+
+**Unbekannte verschlüsselte DNS-Server:** DNS-over-HTTPS sieht aus wie normaler Webverkehr. Tuxsitter
+sperrt die bekannten DoH-Server und die DNS-Einstellung der installierten Browser – ein Browser, den das
+Kind selbst installiert (z. B. als Flatpak), könnte aber einen kleinen, unbekannten DoH-Server nutzen.
+**CleanBrowsing Family** (oder NextDNS mit „Umgehungsmethoden blockieren“) sperrt auch solche Server –
+empfohlen für ältere, technikaffine Kinder.
 
 ## Deinstallation
 

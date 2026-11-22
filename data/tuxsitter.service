@@ -2,6 +2,7 @@
 Description=Tuxsitter parental controls (screen time and DNS filter)
 Documentation=https://github.com/chpusch/tuxsitter
 After=network.target systemd-logind.service
+Wants=tuxsitter-dns.service
 
 [Service]
 Type=simple

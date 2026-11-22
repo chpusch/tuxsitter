@@ -224,8 +224,9 @@ def apply_settings(cfg, new):
         if user not in cfg["children"]:
             raise AdminError("unknown_child")
         cfg["children"][user] = clean_child(c)
-    if "update_check" in new:
-        cfg["update_check"] = _bool(new["update_check"])
+    for key in ("update_check", "browser_doh_lock"):
+        if key in new:
+            cfg[key] = _bool(new[key])
     return cfg
 
 

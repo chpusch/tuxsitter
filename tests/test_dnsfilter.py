@@ -138,3 +138,60 @@ class UpstreamTests(unittest.TestCase):
         up._conn = lambda: type("C", (), {"close": lambda self: None})()
         with self.assertRaises(OSError):
             up.query(D.make_query("example.com", D.T_A, 7))
+
+
+class RobustnessTests(unittest.TestCase):
+    """Fuzzing: malformed queries and hostile upstream answers must never crash the proxy."""
+
+    def test_fuzz_queries_and_answers(self):
+        import random
+        rnd = random.Random(42)
+
+        def mutate(b):
+            b = bytearray(b)
+            for _ in range(rnd.randint(1, 8)):
+                op = rnd.random()
+                if op < 0.5 and b:
+                    b[rnd.randrange(len(b))] = rnd.randrange(256)
+                elif op < 0.7:
+                    b = b[:rnd.randrange(len(b) + 1)]
+                else:
+                    b += bytes(rnd.randrange(256) for _ in range(rnd.randint(1, 40)))
+            return bytes(b)
+
+        class HostileUpstream:
+            def query(self, data, tcp=False):
+                return mutate(D.build_response(data, 0, [(D.T_A, 60, b"\x01\x02\x03\x04")]))
+
+        f = make_filter(youtube="strict")
+        f.upstream = HostileUpstream()
+        names = ["www.google.de", "youtube.com", "example.com", "dns.google", "a." * 60 + "com"]
+        for _ in range(4000):
+            q = D.make_query(rnd.choice(names), rnd.choice([1, 28, 65, 255]), rnd.randrange(65536))
+            q = mutate(q) if rnd.random() < 0.8 else bytes(rnd.randrange(256) for _ in range(rnd.randint(0, 600)))
+            resp = f.handle(q)                   # must not raise
+            if resp:
+                D.fit_udp(q, resp)               # must not raise either
+
+    def test_hostile_answer_structures(self):
+        loop = b"\x00\x01\x81\x80\x00\x01\x00\x01\x00\x00\x00\x00" + b"\xc0\x0c" * 3
+        with self.assertRaises(D.DNSError):
+            D.parse_records(loop)
+        huge = b"\x00\x01\x81\x80\x00\x01\xff\xff\xff\xff\x00\x00" + D.encode_name("x.com") + b"\x00\x01\x00\x01"
+        with self.assertRaises((D.DNSError, struct.error)):
+            D.parse_records(huge)
+
+    def test_large_answers_are_truncated_for_udp(self):
+        q = D.make_query("big.example", D.T_A, 0x77)
+        big = D.build_response(q, 0, [(D.T_A, 60, bytes([10, 0, 0, i])) for i in range(60)])
+        r = D.fit_udp(q, big)
+        self.assertTrue(r[2] & 0x02)                         # TC flag -> client retries via TCP
+        self.assertEqual(D.parse_records(r), (0, []))
+        self.assertLessEqual(len(r), 512)
+        small = D.build_response(q, 0, [(D.T_A, 60, b"\x01\x01\x01\x01")])
+        self.assertEqual(D.fit_udp(q, small), small)
+
+    def test_sibling_ports_are_guarded(self):
+        rs = D.build_ruleset([(1001, 21001, True), (1002, 21002, False)])
+        self.assertIn("udp dport 21001 meta skuid != 1001 reject", rs)
+        self.assertIn("tcp dport 21002 meta skuid != 1002 reject", rs)

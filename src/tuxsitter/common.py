@@ -13,7 +13,7 @@ from i18n import _, N_
 
 APP_NAME = "Tuxsitter"
 APP_ID = "io.github.chpusch.Tuxsitter"
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 HOMEPAGE = "https://github.com/chpusch/tuxsitter"
 
 CONFIG_DIR = os.environ.get("TUXSITTER_CONFIG_DIR", "/etc/tuxsitter")
@@ -38,7 +38,7 @@ PROVIDERS = {
     },
     "cleanbrowsing": {
         "name": "CleanBrowsing Family",
-        "desc": N_("Stricter filter, also blocks VPNs and proxies. Free."),
+        "desc": N_("Stricter: also blocks VPNs, proxies and other DNS services that could bypass the filter, and sites like Reddit. Recommended for older children. Free."),
         "doh": "https://doh.cleanbrowsing.org/doh/family-filter/",
     },
     "adguard": {
@@ -94,6 +94,7 @@ DEFAULT_CONFIG = {
     "version": 1,
     "pin": None,
     "update_check": True,   # look for a newer release on GitHub once a day
+    "browser_doh_lock": True,   # switch off the browsers' own DNS (policies for all accounts)
     "children": {},
 }
 

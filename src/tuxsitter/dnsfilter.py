@@ -189,6 +189,35 @@ def parse_records(buf):
     return flags & 0x0F, recs
 
 
+def udp_limit(query):
+    """Largest UDP answer the client accepts: 512 bytes, or the EDNS buffer size it announced."""
+    try:
+        _, _, _, _, _, off = parse_question(query)
+        ar = struct.unpack("!H", query[10:12])[0]
+        for _ in range(ar):
+            _, off = read_name(query, off)
+            rtype, rclass, _, rdlen = struct.unpack("!HHIH", query[off:off + 10])
+            if rtype == T_OPT:
+                return max(512, min(rclass, 4096))
+            off += 10 + rdlen
+    except (DNSError, struct.error, IndexError):
+        pass
+    return 512
+
+
+def fit_udp(query, resp):
+    """Answers that are too big for UDP are replaced by an empty answer with the TC
+    ("truncated") flag - the client then asks again over TCP and gets everything."""
+    if len(resp) <= udp_limit(query):
+        return resp
+    try:
+        _, _, _, _, _, qend = parse_question(resp)
+    except (DNSError, struct.error, IndexError):
+        return build_response(query, RC_SERVFAIL)
+    flags = struct.unpack("!H", resp[2:4])[0] | 0x0200       # TC bit
+    return resp[:2] + struct.pack("!HHHHH", flags, 1, 0, 0, 0) + resp[12:qend]
+
+
 def build_response(query, rcode=RC_NOERROR, answers=()):
     """Response echoing the question. answers: [(type, ttl, rdata)] owned by the question name."""
     qid, flags, _, _, _, qend = parse_question(query)
@@ -292,7 +321,7 @@ class PlainUpstream:
 class DohUpstream:
     """DNS-over-HTTPS (RFC 8484) with certificate checking and a small keep-alive pool."""
 
-    def __init__(self, url, size=4):
+    def __init__(self, url, size=8):
         u = urllib.parse.urlsplit(url)
         if u.scheme != "https" or not u.hostname:
             raise ValueError("bad DoH URL")
@@ -538,6 +567,7 @@ class DNSServer:
             f = self._filter(port)
             resp = f.handle(data) if f else None
             if resp:
+                resp = fit_udp(data, resp)
                 try:
                     s.sendto(resp, addr)
                 except OSError:
@@ -616,6 +646,10 @@ def build_ruleset(entries):
         "  chain filter_out {",
         "    type filter hook output priority 0; policy accept;",
     ]
+    for uid, port, _ in entries:
+        # a child's filter port may only be used by that child (not by a sibling with laxer rules)
+        lines.append("    udp dport %d meta skuid != %d reject" % (port, uid))
+        lines.append("    tcp dport %d meta skuid != %d reject" % (port, uid))
     for uid, _, block in entries:
         if block:
             lines.append("    meta skuid %d tcp dport 853 reject" % uid)
