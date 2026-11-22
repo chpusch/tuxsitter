@@ -15,6 +15,7 @@ Tighter and more secure internet filter.
 - ⚡ More reused connections to the filter provider.
 - ⚠️ The parent app warns when the DNS filter service is not running.
 - CleanBrowsing is now described as "recommended for older children" (it also blocks bypass methods).
+- "Block workarounds" now says honestly what it cannot catch (unknown DNS services, VPNs).
 - Robustness tests (fuzzing) run automatically with every change.
 
 ## 0.3.0 - 2026-11-22

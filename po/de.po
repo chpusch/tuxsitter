@@ -488,8 +488,8 @@ msgid "Block workarounds"
 msgstr "Umgehung blockieren"
 
 #: src/tuxsitter/gui.py:864
-msgid "Blocks encrypted DNS (DoH/DoT) of other providers and the Tor download, so the filter cannot be bypassed."
-msgstr "Sperrt verschlüsseltes DNS (DoH/DoT) fremder Anbieter und den Tor-Download, damit der Filter nicht ausgetrickst werden kann."
+msgid "Blocks known third-party DNS services. Unknown services and VPNs are only recognised by a strict filter such as CleanBrowsing."
+msgstr "Sperrt bekannte fremde DNS-Dienste. Unbekannte Dienste und VPNs erkennt nur ein strenger Filter wie CleanBrowsing."
 
 #: src/tuxsitter/gui.py:868
 msgid "Lock DNS settings in browsers"

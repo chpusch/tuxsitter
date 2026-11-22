@@ -486,7 +486,7 @@ msgid "Block workarounds"
 msgstr ""
 
 #: src/tuxsitter/gui.py:864
-msgid "Blocks encrypted DNS (DoH/DoT) of other providers and the Tor download, so the filter cannot be bypassed."
+msgid "Blocks known third-party DNS services. Unknown services and VPNs are only recognised by a strict filter such as CleanBrowsing."
 msgstr ""
 
 #: src/tuxsitter/gui.py:868
