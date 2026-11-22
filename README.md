@@ -33,8 +33,8 @@ Parents get one simple window; the child sees how much time is left in the panel
 - ⚠️ **Fair warnings** - notifications at 15, 5 and 1 minute, then a 60-second countdown before logout
 - 🔑 **Extra time with a parent PIN** - right on the child's computer, no need to log in
 - 🌐 **Internet filter for the child's account only** - your own accounts stay untouched, queries are encrypted
-  - choose a family DNS provider: Cloudflare for Families, CleanBrowsing, AdGuard Family,
-    OpenDNS FamilyShield, **your own NextDNS profile**, or a custom server (e.g. Pi-hole)
+  - choose a family DNS provider: **OpenDNS FamilyShield (default)**, CleanBrowsing, Cloudflare for
+    Families, AdGuard Family, **your own NextDNS profile**, or a custom server (e.g. Pi-hole)
   - enforced **SafeSearch** for Google, Bing and DuckDuckGo
   - **YouTube Restricted Mode** (moderate or strict)
   - **blocks the usual workarounds**: DNS-over-HTTPS / DNS-over-TLS of other providers, hard-coded public resolvers, the Tor download
@@ -156,8 +156,9 @@ No parental control is perfect. Things to be aware of:
   VPNs not known to the filter provider). Talking about the rules helps more than any software.
 - **Unknown encrypted-DNS servers:** DNS-over-HTTPS looks like normal web traffic. Tuxsitter blocks the
   well-known DoH servers and locks the DNS setting of installed browsers, but a browser the child installs
-  itself (e.g. a Flatpak) could use a small, unknown DoH server. **CleanBrowsing Family** (or NextDNS with
-  "Block bypass methods") also blocks such servers - recommended for older, tech-savvy children.
+  itself (e.g. a Flatpak) could use a small, unknown DoH server. The default **OpenDNS FamilyShield** blocks such
+  servers, VPN and proxy sites as well (so does CleanBrowsing, or NextDNS with "Block bypass methods").
+  Cloudflare and AdGuard do not - avoid them for older, tech-savvy children.
 - The DNS filter blocks domains, not individual pages.
 - Time is counted per computer. Multiple computers each need Tuxsitter.
 - Roughly tested on Linux Mint (Cinnamon) only. Other desktops should work; the panel icon needs

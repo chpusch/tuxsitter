@@ -11,82 +11,82 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/tuxsitter/common.py:227
+#: src/tuxsitter/common.py:258
 msgid "Invalid request."
 msgstr "Requête non valide."
 
-#: src/tuxsitter/common.py:228
+#: src/tuxsitter/common.py:259
 #, python-brace-format
 msgid "Too many attempts. Please try again in {time}."
 msgstr "Trop de tentatives. Réessaie dans {time}."
 
-#: src/tuxsitter/common.py:229
+#: src/tuxsitter/common.py:260
 msgid "No parent PIN has been set yet."
 msgstr "Aucun code parental n'a encore été défini."
 
-#: src/tuxsitter/common.py:230
+#: src/tuxsitter/common.py:261
 msgid "Wrong PIN."
 msgstr "Code incorrect."
 
-#: src/tuxsitter/common.py:231
+#: src/tuxsitter/common.py:262
 msgid "Permission denied."
 msgstr "Autorisation refusée."
 
-#: src/tuxsitter/common.py:232
+#: src/tuxsitter/common.py:263
 msgid "Unknown child."
 msgstr "Enfant inconnu."
 
-#: src/tuxsitter/common.py:233
+#: src/tuxsitter/common.py:264
 msgid "Unknown command."
 msgstr "Commande inconnue."
 
-#: src/tuxsitter/common.py:234
+#: src/tuxsitter/common.py:265
 msgid "Internal error."
 msgstr "Erreur interne."
 
-#: src/tuxsitter/common.py:235
+#: src/tuxsitter/common.py:266
 msgid "The Tuxsitter service is not reachable."
 msgstr "Le service Tuxsitter est injoignable."
 
-#: src/tuxsitter/common.py:236
+#: src/tuxsitter/common.py:267
 msgid "Invalid NextDNS profile ID."
 msgstr "Identifiant de profil NextDNS non valide."
 
-#: src/tuxsitter/common.py:237
+#: src/tuxsitter/common.py:268
 msgid "Invalid DNS server address."
 msgstr "Adresse de serveur DNS non valide."
 
-#: src/tuxsitter/common.py:238
+#: src/tuxsitter/common.py:269
 msgid "The filter did not return an address."
 msgstr "Le filtre n'a renvoyé aucune adresse."
 
-#: src/tuxsitter/common.py:239
+#: src/tuxsitter/common.py:270
 msgid "Please confirm with your password first."
 msgstr "Veuillez d'abord confirmer avec votre mot de passe."
 
-#: src/tuxsitter/common.py:240
+#: src/tuxsitter/common.py:271
 msgid "Authentication failed."
 msgstr "Échec de l'authentification."
 
-#: src/tuxsitter/common.py:241
+#: src/tuxsitter/common.py:272
 msgid "The password check (polkit) is not available on this system."
 msgstr "La vérification du mot de passe (polkit) n'est pas disponible sur ce système."
 
-#: src/tuxsitter/common.py:242
+#: src/tuxsitter/common.py:273
 msgid "Invalid or already existing username."
 msgstr "Nom d'utilisateur non valide ou déjà existant."
 
-#: src/tuxsitter/common.py:243
+#: src/tuxsitter/common.py:274
 msgid "The password must have at least 4 characters."
 msgstr "Le mot de passe doit comporter au moins 4 caractères."
 
-#: src/tuxsitter/common.py:244
+#: src/tuxsitter/common.py:275
 msgid "The account could not be created."
 msgstr "Le compte n'a pas pu être créé."
 
 #: src/tuxsitter/common.py:36
-msgid "Blocks adult content and malware. Free and very fast."
-msgstr "Bloque les contenus pour adultes et les logiciels malveillants. Gratuit et très rapide."
+msgid "Blocks adult content and malware, but not VPNs or other DNS services. Free and very fast."
+msgstr "Bloque les contenus pour adultes et les logiciels malveillants, mais pas les VPN ni les autres services DNS. Gratuit et très rapide."
 
 #: src/tuxsitter/common.py:41
 msgid "Stricter: also blocks VPNs, proxies and other DNS services that could bypass the filter, and sites like Reddit. Recommended for older children. Free."
@@ -97,8 +97,8 @@ msgid "Blocks adult content and also ads. Free."
 msgstr "Bloque les contenus pour adultes ainsi que la publicité. Gratuit."
 
 #: src/tuxsitter/common.py:51
-msgid "Blocks adult content. Free."
-msgstr "Bloque les contenus pour adultes. Gratuit."
+msgid "Recommended: blocks adult content and also VPNs, proxies and other DNS services that could bypass the filter. Free."
+msgstr "Recommandé : bloque les contenus pour adultes ainsi que les VPN, les proxys et les autres services DNS permettant de contourner le filtre. Gratuit."
 
 #: src/tuxsitter/common.py:55
 msgid "NextDNS (your own profile)"
@@ -116,33 +116,33 @@ msgstr "Serveur DNS personnalisé"
 msgid "IP address(es) of your own filter, e.g. Pi-hole. Separate several with commas."
 msgstr "Adresse(s) IP de votre propre filtre, p. ex. Pi-hole. Séparez-les par des virgules."
 
-#: src/tuxsitter/common.py:206
+#: src/tuxsitter/common.py:237
 #, python-brace-format
 msgid "{m} min"
 msgstr "{m} min"
 
-#: src/tuxsitter/common.py:223
+#: src/tuxsitter/common.py:254
 #, python-brace-format
 msgid "tomorrow from {time}"
 msgstr "demain à partir de {time}"
 
-#: src/tuxsitter/common.py:197
+#: src/tuxsitter/common.py:228
 #, python-brace-format
 msgid "{s} s"
 msgstr "{s} s"
 
-#: src/tuxsitter/common.py:203
+#: src/tuxsitter/common.py:234
 #, python-brace-format
 msgid "{h} h {m} min"
 msgstr "{h} h {m} min"
 
-#: src/tuxsitter/common.py:205
+#: src/tuxsitter/common.py:236
 #: src/tuxsitter/gui.py:738
 #, python-brace-format
 msgid "{h} h"
 msgstr "{h} h"
 
-#: src/tuxsitter/common.py:222
+#: src/tuxsitter/common.py:253
 #, python-brace-format
 msgid "today from {time}"
 msgstr "aujourd'hui à partir de {time}"
@@ -488,8 +488,8 @@ msgid "Block workarounds"
 msgstr "Bloquer les contournements"
 
 #: src/tuxsitter/gui.py:864
-msgid "Blocks known third-party DNS services. Unknown services and VPNs are only recognised by a strict filter such as CleanBrowsing."
-msgstr "Bloque les services DNS tiers connus. Seul un filtre strict comme CleanBrowsing reconnaît les services inconnus et les VPN."
+msgid "Blocks known third-party DNS services. Unknown services and VPNs are only recognised by a strict filter such as CleanBrowsing or OpenDNS."
+msgstr "Bloque les services DNS tiers connus. Seul un filtre strict comme CleanBrowsing ou OpenDNS reconnaît les services inconnus et les VPN."
 
 #: src/tuxsitter/gui.py:868
 msgid "Lock DNS settings in browsers"

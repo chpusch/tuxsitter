@@ -862,7 +862,7 @@ class MainWindow(Gtk.ApplicationWindow):
         bp.connect("notify::active", lambda s, _pspec: self.set_val(d, "block_bypass", s.get_active()))
         opt.add(setting_row(_("Block workarounds"), bp,
                             _("Blocks known third-party DNS services. Unknown services and VPNs are only "
-                              "recognised by a strict filter such as CleanBrowsing.")))
+                              "recognised by a strict filter such as CleanBrowsing or OpenDNS.")))
         bl = Gtk.Switch(active=bool(self.cfg.get("browser_doh_lock", True)))
         bl.connect("notify::active", lambda s, _pspec: self.set_val(self.cfg, "browser_doh_lock", s.get_active()))
         opt.add(setting_row(_("Lock DNS settings in browsers"), bl,

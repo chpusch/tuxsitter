@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.1 - 2026-11-22
+
+- **OpenDNS FamilyShield is now the default filter** (was Cloudflare for Families).
+  Why: measured with `check_providers.py`, OpenDNS FamilyShield blocks not only adult content but
+  also other DNS services, VPN sites, web proxies and Tor - Cloudflare blocks almost none of them.
+  That closes the remaining gap Tuxsitter cannot close by itself: a browser the child installs
+  without admin rights (e.g. a Flatpak) that uses a small, unknown DNS-over-HTTPS server.
+- **Automatic switch on update:** children set to Cloudflare for Families are moved to OpenDNS
+  FamilyShield. Older versions did not record whether Cloudflare was the default or a deliberate
+  choice, so this applies to all of them - if you really want Cloudflare, select it again under
+  *Internet*; it will not be changed again. Other providers (CleanBrowsing, AdGuard, NextDNS,
+  custom server) are not touched.
+- `check_providers.py` now shows which ways around the filter each provider blocks by itself
+  (other DNS services, VPN sites, web proxies, Tor). It does not query any adult site - which
+  content is blocked is up to the provider.
+- Measured with it: **OpenDNS FamilyShield** blocks bypass methods as thoroughly as CleanBrowsing.
+  Its description and the "Block workarounds" hint now say so.
+
 ## 0.4.0 - 2026-11-22
 
 Tighter and more secure internet filter.

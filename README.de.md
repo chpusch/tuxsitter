@@ -33,8 +33,8 @@ einfaches Fenster, das Kind sieht im Panel, wie viel Zeit noch übrig ist.
 - ⚠️ **Faire Vorwarnung** – Hinweise bei 15, 5 und 1 Minute, dann 60 Sekunden Countdown bis zur Abmeldung
 - 🔑 **Extrazeit per Eltern-PIN** – direkt am PC des Kindes, ohne Anmelden
 - 🌐 **Internet-Filter nur für das Kinderkonto** – deine eigenen Konten bleiben unberührt, Anfragen verschlüsselt
-  - Familienfilter wählbar: Cloudflare for Families, CleanBrowsing, AdGuard Family,
-    OpenDNS FamilyShield, **eigenes NextDNS-Profil** oder eigener Server (z. B. Pi-hole)
+  - Familienfilter wählbar: **OpenDNS FamilyShield (Standard)**, CleanBrowsing, Cloudflare for
+    Families, AdGuard Family, **eigenes NextDNS-Profil** oder eigener Server (z. B. Pi-hole)
   - **SafeSearch** erzwungen für Google, Bing und DuckDuckGo
   - **YouTube eingeschränkter Modus** (moderat oder streng)
   - **DNS-Einstellung der Browser gesperrt** (Firefox, Chrome, Chromium, Brave, Edge, Vivaldi)
@@ -130,8 +130,9 @@ keine einzelnen Seiten. Reden hilft mehr als jede Software.
 **Unbekannte verschlüsselte DNS-Server:** DNS-over-HTTPS sieht aus wie normaler Webverkehr. Tuxsitter
 sperrt die bekannten DoH-Server und die DNS-Einstellung der installierten Browser – ein Browser, den das
 Kind selbst installiert (z. B. als Flatpak), könnte aber einen kleinen, unbekannten DoH-Server nutzen.
-**CleanBrowsing Family** (oder NextDNS mit „Umgehungsmethoden blockieren“) sperrt auch solche Server –
-empfohlen für ältere, technikaffine Kinder.
+Der Standardfilter **OpenDNS FamilyShield** sperrt auch solche Server sowie VPN- und Proxy-Seiten
+(ebenso CleanBrowsing oder NextDNS mit „Umgehungsmethoden blockieren“). Cloudflare und AdGuard tun das
+nicht – für ältere, technikaffine Kinder besser nicht wählen.
 
 ## Deinstallation
 

@@ -11,81 +11,81 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/tuxsitter/common.py:227
+#: src/tuxsitter/common.py:258
 msgid "Invalid request."
 msgstr ""
 
-#: src/tuxsitter/common.py:228
+#: src/tuxsitter/common.py:259
 #, python-brace-format
 msgid "Too many attempts. Please try again in {time}."
 msgstr ""
 
-#: src/tuxsitter/common.py:229
+#: src/tuxsitter/common.py:260
 msgid "No parent PIN has been set yet."
 msgstr ""
 
-#: src/tuxsitter/common.py:230
+#: src/tuxsitter/common.py:261
 msgid "Wrong PIN."
 msgstr ""
 
-#: src/tuxsitter/common.py:231
+#: src/tuxsitter/common.py:262
 msgid "Permission denied."
 msgstr ""
 
-#: src/tuxsitter/common.py:232
+#: src/tuxsitter/common.py:263
 msgid "Unknown child."
 msgstr ""
 
-#: src/tuxsitter/common.py:233
+#: src/tuxsitter/common.py:264
 msgid "Unknown command."
 msgstr ""
 
-#: src/tuxsitter/common.py:234
+#: src/tuxsitter/common.py:265
 msgid "Internal error."
 msgstr ""
 
-#: src/tuxsitter/common.py:235
+#: src/tuxsitter/common.py:266
 msgid "The Tuxsitter service is not reachable."
 msgstr ""
 
-#: src/tuxsitter/common.py:236
+#: src/tuxsitter/common.py:267
 msgid "Invalid NextDNS profile ID."
 msgstr ""
 
-#: src/tuxsitter/common.py:237
+#: src/tuxsitter/common.py:268
 msgid "Invalid DNS server address."
 msgstr ""
 
-#: src/tuxsitter/common.py:238
+#: src/tuxsitter/common.py:269
 msgid "The filter did not return an address."
 msgstr ""
 
-#: src/tuxsitter/common.py:239
+#: src/tuxsitter/common.py:270
 msgid "Please confirm with your password first."
 msgstr ""
 
-#: src/tuxsitter/common.py:240
+#: src/tuxsitter/common.py:271
 msgid "Authentication failed."
 msgstr ""
 
-#: src/tuxsitter/common.py:241
+#: src/tuxsitter/common.py:272
 msgid "The password check (polkit) is not available on this system."
 msgstr ""
 
-#: src/tuxsitter/common.py:242
+#: src/tuxsitter/common.py:273
 msgid "Invalid or already existing username."
 msgstr ""
 
-#: src/tuxsitter/common.py:243
+#: src/tuxsitter/common.py:274
 msgid "The password must have at least 4 characters."
 msgstr ""
 
-#: src/tuxsitter/common.py:244
+#: src/tuxsitter/common.py:275
 msgid "The account could not be created."
 msgstr ""
 
 #: src/tuxsitter/common.py:36
-msgid "Blocks adult content and malware. Free and very fast."
+msgid "Blocks adult content and malware, but not VPNs or other DNS services. Free and very fast."
 msgstr ""
 
 #: src/tuxsitter/common.py:41
@@ -97,7 +97,7 @@ msgid "Blocks adult content and also ads. Free."
 msgstr ""
 
 #: src/tuxsitter/common.py:51
-msgid "Blocks adult content. Free."
+msgid "Recommended: blocks adult content and also VPNs, proxies and other DNS services that could bypass the filter. Free."
 msgstr ""
 
 #: src/tuxsitter/common.py:55
@@ -116,33 +116,33 @@ msgstr ""
 msgid "IP address(es) of your own filter, e.g. Pi-hole. Separate several with commas."
 msgstr ""
 
-#: src/tuxsitter/common.py:206
+#: src/tuxsitter/common.py:237
 #, python-brace-format
 msgid "{m} min"
 msgstr ""
 
-#: src/tuxsitter/common.py:223
+#: src/tuxsitter/common.py:254
 #, python-brace-format
 msgid "tomorrow from {time}"
 msgstr ""
 
-#: src/tuxsitter/common.py:197
+#: src/tuxsitter/common.py:228
 #, python-brace-format
 msgid "{s} s"
 msgstr ""
 
-#: src/tuxsitter/common.py:203
+#: src/tuxsitter/common.py:234
 #, python-brace-format
 msgid "{h} h {m} min"
 msgstr ""
 
-#: src/tuxsitter/common.py:205
+#: src/tuxsitter/common.py:236
 #: src/tuxsitter/gui.py:738
 #, python-brace-format
 msgid "{h} h"
 msgstr ""
 
-#: src/tuxsitter/common.py:222
+#: src/tuxsitter/common.py:253
 #, python-brace-format
 msgid "today from {time}"
 msgstr ""
@@ -486,7 +486,7 @@ msgid "Block workarounds"
 msgstr ""
 
 #: src/tuxsitter/gui.py:864
-msgid "Blocks known third-party DNS services. Unknown services and VPNs are only recognised by a strict filter such as CleanBrowsing."
+msgid "Blocks known third-party DNS services. Unknown services and VPNs are only recognised by a strict filter such as CleanBrowsing or OpenDNS."
 msgstr ""
 
 #: src/tuxsitter/gui.py:868

@@ -13,7 +13,7 @@ from i18n import _, N_
 
 APP_NAME = "Tuxsitter"
 APP_ID = "io.github.chpusch.Tuxsitter"
-VERSION = "0.4.0"
+VERSION = "0.4.1"
 HOMEPAGE = "https://github.com/chpusch/tuxsitter"
 
 CONFIG_DIR = os.environ.get("TUXSITTER_CONFIG_DIR", "/etc/tuxsitter")
@@ -33,7 +33,7 @@ DNS_PORT_BASE = 20000  # child with UID 1001 -> local port 21001
 PROVIDERS = {
     "cloudflare": {
         "name": "Cloudflare for Families",
-        "desc": N_("Blocks adult content and malware. Free and very fast."),
+        "desc": N_("Blocks adult content and malware, but not VPNs or other DNS services. Free and very fast."),
         "doh": "https://family.cloudflare-dns.com/dns-query",
     },
     "cleanbrowsing": {
@@ -48,7 +48,7 @@ PROVIDERS = {
     },
     "opendns": {
         "name": "OpenDNS FamilyShield",
-        "desc": N_("Blocks adult content. Free."),
+        "desc": N_("Recommended: blocks adult content and also VPNs, proxies and other DNS services that could bypass the filter. Free."),
         "doh": "https://familyshield.opendns.com/dns-query",
     },
     "nextdns": {
@@ -61,7 +61,7 @@ PROVIDERS = {
         "desc": N_("IP address(es) of your own filter, e.g. Pi-hole. Separate several with commas."),
     },
 }
-PROVIDER_ORDER = ["cloudflare", "cleanbrowsing", "adguard", "opendns", "nextdns", "custom"]
+PROVIDER_ORDER = ["opendns", "cleanbrowsing", "cloudflare", "adguard", "nextdns", "custom"]
 
 # ---------------------------------------------------------------------------
 # Defaults
@@ -81,7 +81,7 @@ DEFAULT_CHILD = {
     "weekend": dict(DEFAULT_DAY, limit_min=150, start="08:00", end="21:00"),
     "dns": {
         "enabled": True,
-        "provider": "cloudflare",
+        "provider": "opendns",
         "nextdns_id": "",
         "custom": "",
         "safesearch": True,
@@ -91,7 +91,7 @@ DEFAULT_CHILD = {
 }
 
 DEFAULT_CONFIG = {
-    "version": 1,
+    "version": 2,
     "pin": None,
     "update_check": True,   # look for a newer release on GitHub once a day
     "browser_doh_lock": True,   # switch off the browsers' own DNS (policies for all accounts)
@@ -141,10 +141,41 @@ def save_json(path, data, mode=0o600):
         raise
 
 
+CONFIG_VERSION = 2
+
+
+def migrate_config(cfg):
+    """Bring an older config up to CONFIG_VERSION. Returns True if something changed."""
+    try:
+        version = int(cfg.get("version", 1))
+    except (TypeError, ValueError):
+        version = 1
+    if version >= CONFIG_VERSION:
+        return False
+    if version < 2:
+        # 0.4.1: the default filter changed from Cloudflare for Families to OpenDNS FamilyShield,
+        # which also blocks other DNS services, VPN and proxy sites. Before 0.4.1 "cloudflare" was
+        # the default; a deliberate choice cannot be told apart from it, so all are switched.
+        for child in cfg.get("children", {}).values():
+            dns = child.get("dns", {})
+            if dns.get("provider") == "cloudflare":
+                dns["provider"] = "opendns"
+    cfg["version"] = CONFIG_VERSION
+    return True
+
+
 def load_config():
-    cfg = _merge(DEFAULT_CONFIG, load_json(CONFIG_FILE, DEFAULT_CONFIG))
+    raw = load_json(CONFIG_FILE, None)
+    cfg = _merge(DEFAULT_CONFIG, raw if raw is not None else DEFAULT_CONFIG)
+    if raw is not None and "version" not in raw:
+        cfg["version"] = 1
     cfg.pop("browser_policies", None)
     cfg["children"] = {u: _merge(DEFAULT_CHILD, c) for u, c in cfg.get("children", {}).items()}
+    if migrate_config(cfg) and raw is not None:
+        try:
+            save_config(cfg)          # only root can write; otherwise migrate again next time
+        except OSError:
+            pass
     return cfg
 
 

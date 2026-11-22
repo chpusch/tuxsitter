@@ -45,7 +45,7 @@ DOH_HOSTS = {
     "controld.com",
     "doh.libredns.gr", "dns.switch.ch", "doh.ffmuc.net", "dot.ffmuc.net",
     "dns3.digitalcourage.de", "doh.applied-privacy.net",
-    "dns0.eu", "dns.alidns.com", "doh.pub", "dns.twnic.tw",
+    "dns0.eu", "joindns4.eu", "dns.alidns.com", "doh.pub", "dns.twnic.tw",
     "mask.icloud.com", "mask-h2.icloud.com",
     "doh.xfinity.com", "dns.brahma.world", "dnsforge.de",
 }
@@ -66,6 +66,7 @@ DOH_IPV4 = [
     "194.242.2.0/24", "185.222.222.222", "45.11.45.11",
     "76.76.2.0/24", "76.76.10.0/24",
     "193.110.81.0/24", "185.253.5.0/24",
+    "86.54.11.0/24",
 ]
 DOH_IPV6 = [
     "2606:4700:4700::/48",
@@ -375,10 +376,10 @@ NEXTDNS_ID_RE = re.compile(r"^[A-Za-z0-9]{4,20}$")
 
 def make_upstream(dns_cfg, device="Tuxsitter"):
     from common import PROVIDERS
-    prov = dns_cfg.get("provider", "cloudflare")
+    prov = dns_cfg.get("provider", "opendns")
     if prov == "custom":
         return PlainUpstream(dns_cfg.get("custom", "").replace(";", ",").split(","))
-    url = PROVIDERS.get(prov, PROVIDERS["cloudflare"])["doh"]
+    url = PROVIDERS.get(prov, PROVIDERS["opendns"])["doh"]
     if prov == "nextdns":
         pid = dns_cfg.get("nextdns_id", "").strip()
         if not NEXTDNS_ID_RE.match(pid):

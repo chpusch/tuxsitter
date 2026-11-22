@@ -161,3 +161,30 @@ class BrowserPolicyTests(unittest.TestCase):
             self.assertFalse(os.path.exists(os.path.join(root, "chrome", "tuxsitter.json")))
         finally:
             B.FIREFOX, B.CHROMIUM_DIRS = old
+
+
+class MigrationTests(unittest.TestCase):
+    def kid(self, provider):
+        c = C.new_child_config()
+        c["dns"]["provider"] = provider
+        return c
+
+    def test_cloudflare_moves_to_opendns_once(self):
+        C.save_config({"version": 1, "pin": None, "children": {
+            "a": self.kid("cloudflare"), "b": self.kid("cleanbrowsing"), "c": self.kid("nextdns")}})
+        cfg = C.load_config()
+        self.assertEqual(cfg["version"], C.CONFIG_VERSION)
+        self.assertEqual([cfg["children"][u]["dns"]["provider"] for u in "abc"],
+                         ["opendns", "cleanbrowsing", "nextdns"])
+        # persisted, and a deliberate choice of Cloudflare afterwards is kept
+        self.assertEqual(C.load_json(C.CONFIG_FILE, {})["version"], C.CONFIG_VERSION)
+        cfg["children"]["a"]["dns"]["provider"] = "cloudflare"
+        C.save_config(cfg)
+        self.assertEqual(C.load_config()["children"]["a"]["dns"]["provider"], "cloudflare")
+
+    def test_config_without_version_is_migrated(self):
+        C.save_config({"pin": None, "children": {"a": self.kid("cloudflare")}})
+        self.assertEqual(C.load_config()["children"]["a"]["dns"]["provider"], "opendns")
+
+    def test_new_child_defaults_to_opendns(self):
+        self.assertEqual(C.new_child_config()["dns"]["provider"], "opendns")
