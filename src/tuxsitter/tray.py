@@ -12,20 +12,41 @@ import gi  # noqa: E402
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib  # noqa: E402
 
-try:
-    gi.require_version("XApp", "1.0")
-    from gi.repository import XApp  # Cinnamon / Linux Mint
-except (ValueError, ImportError):
-    XApp = None
-AppIndicator = None
-if XApp is None:
+# Which panel icon to use: XApp on desktops with an XApp panel applet (Cinnamon, MATE, Xfce),
+# AppIndicator everywhere else (Ubuntu's GNOME shows AppIndicators, but not XApp icons on Wayland).
+XAPP_DESKTOPS = ("CINNAMON", "X-CINNAMON", "MATE", "XFCE")
+
+
+def wants_xapp(desktop):
+    return any(d.upper() in XAPP_DESKTOPS for d in (desktop or "").split(":"))
+
+
+def load_xapp():
+    try:
+        gi.require_version("XApp", "1.0")
+        from gi.repository import XApp as mod
+        return mod
+    except (ValueError, ImportError):
+        return None
+
+
+def load_appindicator():
     for ns in ("AyatanaAppIndicator3", "AppIndicator3"):
         try:
             gi.require_version(ns, "0.1")
-            AppIndicator = getattr(__import__("gi.repository", fromlist=[ns]), ns)
-            break
+            return getattr(__import__("gi.repository", fromlist=[ns]), ns)
         except (ValueError, ImportError):
             pass
+    return None
+
+
+XApp = AppIndicator = None
+if wants_xapp(os.environ.get("XDG_CURRENT_DESKTOP")):
+    XApp = load_xapp()
+if XApp is None:
+    AppIndicator = load_appindicator()
+if XApp is None and AppIndicator is None:
+    XApp = load_xapp()
 try:
     gi.require_version("Notify", "0.7")
     from gi.repository import Notify

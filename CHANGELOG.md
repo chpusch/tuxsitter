@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.4 - 2026-11-25
+
+- **Fixed: no time display in the panel on Ubuntu.** The package installed the Cinnamon panel
+  library (XApp) on Ubuntu too, and the indicator then used it - but GNOME does not show such
+  icons. The indicator now uses XApp only on Cinnamon, MATE and Xfce and AppIndicator everywhere
+  else; the AppIndicator library is now a dependency.
+
 ## 0.4.3 - 2026-11-25
 
 - **Fixed: no icon in the Ubuntu dock** (only a generic placeholder) while the parent app is open.

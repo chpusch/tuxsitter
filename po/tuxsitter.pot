@@ -258,7 +258,7 @@ msgid "Open this address in your browser:"
 msgstr ""
 
 #: src/tuxsitter/gui.py:192
-#: src/tuxsitter/tray.py:90
+#: src/tuxsitter/tray.py:111
 msgid "Parent PIN"
 msgstr ""
 
@@ -667,7 +667,7 @@ msgstr ""
 
 #: src/tuxsitter/gui.py:680
 #: src/tuxsitter/gui.py:1012
-#: src/tuxsitter/tray.py:297
+#: src/tuxsitter/tray.py:318
 #, python-brace-format
 msgid "{time} left"
 msgstr ""
@@ -692,93 +692,93 @@ msgid "Filter answers ({ms} ms)"
 msgstr ""
 
 #: src/tuxsitter/gui.py:1010
-#: src/tuxsitter/tray.py:258
+#: src/tuxsitter/tray.py:279
 msgid "No time left"
 msgstr ""
 
-#: src/tuxsitter/tray.py:38
+#: src/tuxsitter/tray.py:59
 msgid "Your screen time for today is used up."
 msgstr ""
 
-#: src/tuxsitter/tray.py:39
+#: src/tuxsitter/tray.py:60
 msgid "This is not screen time right now."
 msgstr ""
 
-#: src/tuxsitter/tray.py:40
+#: src/tuxsitter/tray.py:61
 msgid "The computer is locked for today."
 msgstr ""
 
-#: src/tuxsitter/tray.py:162
+#: src/tuxsitter/tray.py:183
 msgid "Save your work now - you will be logged out shortly."
 msgstr ""
 
-#: src/tuxsitter/tray.py:93
+#: src/tuxsitter/tray.py:114
 msgid "Unlock"
 msgstr ""
 
-#: src/tuxsitter/tray.py:111
+#: src/tuxsitter/tray.py:132
 msgid "Extra time"
 msgstr ""
 
-#: src/tuxsitter/tray.py:119
-#: src/tuxsitter/tray.py:125
+#: src/tuxsitter/tray.py:140
+#: src/tuxsitter/tray.py:146
 msgid "More time"
 msgstr ""
 
-#: src/tuxsitter/tray.py:126
+#: src/tuxsitter/tray.py:147
 msgid "Ask your parents - they can unlock extra time here with their PIN."
 msgstr ""
 
-#: src/tuxsitter/tray.py:137
-#: src/tuxsitter/tray.py:274
+#: src/tuxsitter/tray.py:158
+#: src/tuxsitter/tray.py:295
 msgid "Time is up"
 msgstr ""
 
-#: src/tuxsitter/tray.py:152
+#: src/tuxsitter/tray.py:173
 msgid "Parents: unlock more time"
 msgstr ""
 
-#: src/tuxsitter/tray.py:159
+#: src/tuxsitter/tray.py:180
 msgid "Your time is up."
 msgstr ""
 
-#: src/tuxsitter/tray.py:187
+#: src/tuxsitter/tray.py:208
 msgid "Ask for more time…"
 msgstr ""
 
-#: src/tuxsitter/tray.py:256
+#: src/tuxsitter/tray.py:277
 msgid "Unlimited today"
 msgstr ""
 
-#: src/tuxsitter/tray.py:267
+#: src/tuxsitter/tray.py:288
 msgid "No time-of-day limit"
 msgstr ""
 
-#: src/tuxsitter/tray.py:111
+#: src/tuxsitter/tray.py:132
 #, python-brace-format
 msgid "+{time} unlocked."
 msgstr ""
 
-#: src/tuxsitter/tray.py:164
+#: src/tuxsitter/tray.py:185
 #, python-brace-format
 msgid "Next screen time: {when}."
 msgstr ""
 
-#: src/tuxsitter/tray.py:267
+#: src/tuxsitter/tray.py:288
 #, python-brace-format
 msgid "Allowed from {start} to {end}"
 msgstr ""
 
-#: src/tuxsitter/tray.py:298
+#: src/tuxsitter/tray.py:319
 msgid "Your screen time is almost over. Save your things in time."
 msgstr ""
 
-#: src/tuxsitter/tray.py:262
+#: src/tuxsitter/tray.py:283
 #, python-brace-format
 msgid "{time} left today (until {until})"
 msgstr ""
 
-#: src/tuxsitter/tray.py:264
+#: src/tuxsitter/tray.py:285
 #, python-brace-format
 msgid "{time} left today"
 msgstr ""

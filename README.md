@@ -90,9 +90,9 @@ cd tuxsitter
 sudo apt install ./build/tuxsitter_*_all.deb
 ```
 
-Requirements (installed automatically with the package): `python3`, `python3-gi`, `python3-gi-cairo`, `gir1.2-gtk-3.0`,
-`nftables`, `polkit`, `systemd`. Recommended: `gir1.2-xapp-1.0` (panel icon on Cinnamon) or
-`gir1.2-ayatanaappindicator3-0.1` (other desktops), and `gir1.2-notify-0.7`.
+Requirements (installed automatically with the package): `python3`, `python3-gi`, `python3-gi-cairo`,
+`gir1.2-gtk-3.0`, `gir1.2-ayatanaappindicator3-0.1` (panel icon), `nftables`, `polkit`, `systemd`.
+Recommended: `gir1.2-xapp-1.0` (panel icon on Cinnamon, MATE and Xfce) and `gir1.2-notify-0.7`.
 
 ## Getting started
 
