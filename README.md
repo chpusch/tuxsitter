@@ -79,7 +79,7 @@ cd tuxsitter
 sudo apt install ./build/tuxsitter_*_all.deb
 ```
 
-Requirements (installed automatically with the package): `python3`, `python3-gi`, `gir1.2-gtk-3.0`,
+Requirements (installed automatically with the package): `python3`, `python3-gi`, `python3-gi-cairo`, `gir1.2-gtk-3.0`,
 `nftables`, `polkit`, `systemd`. Recommended: `gir1.2-xapp-1.0` (panel icon on Cinnamon) or
 `gir1.2-ayatanaappindicator3-0.1` (other desktops), and `gir1.2-notify-0.7`.
 
@@ -97,7 +97,7 @@ Requirements (installed automatically with the package): `python3`, `python3-gi`
 
 ## How it works
 
-Tuxsitter has three parts:
+Tuxsitter has four parts:
 
 | Part | Runs as | Job |
 |---|---|---|

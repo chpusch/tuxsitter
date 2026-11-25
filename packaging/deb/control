@@ -3,16 +3,21 @@ Version: @VERSION@
 Section: admin
 Priority: optional
 Architecture: all
-Depends: python3 (>= 3.8), python3-gi, gir1.2-gtk-3.0, nftables, polkitd | policykit-1, systemd
+Installed-Size: @SIZE@
+Depends: python3 (>= 3.8), python3-gi, python3-gi-cairo, gir1.2-gtk-3.0, nftables, polkitd | policykit-1, systemd
 Recommends: gir1.2-xapp-1.0 | gir1.2-ayatanaappindicator3-0.1, gir1.2-notify-0.7
 Maintainer: chpusch <chpusch@users.noreply.github.com>
 Homepage: https://github.com/chpusch/tuxsitter
 Description: Simple parental controls for Linux desktops
  Tuxsitter limits screen time per day (school days, weekend, holidays),
  restricts usage to allowed hours, lets parents grant extra time with a PIN
- and filters the internet for children's accounts only via a per-account
- DNS filter (Cloudflare Family, CleanBrowsing, AdGuard Family, OpenDNS,
- NextDNS profile or a custom server) with SafeSearch, YouTube Restricted
- Mode and blocking of DNS-over-HTTPS workarounds.
+ and filters the internet for children's accounts only. Your own accounts
+ stay untouched.
+ .
+ The per-account DNS filter uses a family DNS provider of your choice
+ (OpenDNS FamilyShield by default, CleanBrowsing, Cloudflare for Families,
+ AdGuard Family, your own NextDNS profile or a custom server such as a
+ Pi-hole), enforces SafeSearch and YouTube Restricted Mode and blocks the
+ usual workarounds.
  .
  Made for Linux Mint (Cinnamon); works on other Ubuntu/Debian based desktops.

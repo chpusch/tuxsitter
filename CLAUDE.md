@@ -11,6 +11,8 @@ CHANGELOG.md for history. This file records **why** things are the way they are.
   anything new.
 - **Secure by default.** Experienced users may deliberately lower protection; the default must be good.
 - Python 3 standard library + PyGObject/GTK3 only. No extra dependencies.
+- **Test on Ubuntu too**, not only Mint: Mint pre-installs packages (e.g. `python3-gi-cairo`) that
+  Ubuntu lacks. Every Python/GI module used must be listed in `packaging/deb/control`.
 
 ## Architecture in short
 
@@ -47,7 +49,8 @@ CHANGELOG.md for history. This file records **why** things are the way they are.
 1. Change code, run `python3 -m unittest discover -s tests -t .`.
 2. New or changed UI strings: `python3 tools/update-po.py`, translate in `po/de.po`, `fr.po`, `es.po`
    (English is the source language). All four languages must stay complete.
-3. Bump `VERSION` in `src/tuxsitter/common.py`, add a CHANGELOG entry.
+3. Bump `VERSION` in `src/tuxsitter/common.py`, add a CHANGELOG entry and a `<release>` entry in
+   `data/io.github.chpusch.tuxsitter.metainfo.xml` (a test checks it).
 4. Build with `./tools/build-deb.sh` → `build/tuxsitter_<version>_all.deb`.
 5. The maintainer tests the .deb on his Linux Mint laptop. **Push only after his OK.**
 6. The maintainer creates the GitHub release himself (tag `v<version>`); CI attaches the .deb.

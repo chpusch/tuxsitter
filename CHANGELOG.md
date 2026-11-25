@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.2 - 2026-11-25
+
+- **Fixed: crash when opening the history on Ubuntu** ("Couldn't find foreign struct converter
+  for 'cairo.Context'"). The chart needs `python3-gi-cairo`, which Linux Mint installs by default
+  but Ubuntu does not. The package now depends on it.
+- **Better information in software centers** (Ubuntu App Center, GNOME Software, Mint Software
+  Manager): AppStream metadata with license, icon, screenshots and links. The package description
+  is up to date again (OpenDNS FamilyShield is the default filter) and the installed size is shown.
+
 ## 0.4.1 - 2026-11-22
 
 - **OpenDNS FamilyShield is now the default filter** (was Cloudflare for Families).

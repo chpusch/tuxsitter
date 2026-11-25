@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- AppStream metadata: shown by software centers (Ubuntu App Center, GNOME Software,
+     Linux Mint Software Manager). Add a <release> entry for every new version. -->
+<component type="desktop-application">
+  <id>io.github.chpusch.tuxsitter</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>Tuxsitter</name>
+  <summary>Simple parental controls for Linux desktops</summary>
+  <summary xml:lang="de">Einfache Kindersicherung für Linux-Desktops</summary>
+  <summary xml:lang="fr">Contrôle parental simple pour les bureaux Linux</summary>
+  <summary xml:lang="es">Control parental sencillo para escritorios Linux</summary>
+  <developer id="io.github.chpusch">
+    <name>chpusch</name>
+  </developer>
+  <description>
+    <p>
+      Tuxsitter is a small, friendly babysitter for the family computer. Parents get one simple
+      window; the child sees how much time is left in the panel.
+    </p>
+    <ul>
+      <li>Daily screen time with separate limits for school days and weekends, plus a holiday mode</li>
+      <li>Allowed hours, fair warnings and a countdown before logout</li>
+      <li>Extra time with a parent PIN, right on the child's computer</li>
+      <li>Internet filter for the child's account only, with a family DNS provider of your choice,
+        SafeSearch and YouTube Restricted Mode</li>
+      <li>History of the last 14 days</li>
+      <li>No accounts, no cloud, no telemetry</li>
+    </ul>
+    <p>Made for Linux Mint (Cinnamon); works on other Ubuntu/Debian based desktops.</p>
+  </description>
+  <launchable type="desktop-id">tuxsitter.desktop</launchable>
+  <icon type="stock">tuxsitter</icon>
+  <categories>
+    <category>Settings</category>
+    <category>System</category>
+    <category>Security</category>
+  </categories>
+  <keywords>
+    <keyword>parental controls</keyword>
+    <keyword>screen time</keyword>
+    <keyword>kids</keyword>
+    <keyword>dns filter</keyword>
+    <keyword xml:lang="de">Kindersicherung</keyword>
+    <keyword xml:lang="de">Bildschirmzeit</keyword>
+  </keywords>
+  <url type="homepage">https://github.com/chpusch/tuxsitter</url>
+  <url type="bugtracker">https://github.com/chpusch/tuxsitter/issues</url>
+  <url type="vcs-browser">https://github.com/chpusch/tuxsitter</url>
+  <url type="translate">https://github.com/chpusch/tuxsitter/blob/main/CONTRIBUTING.md#translations</url>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Today: remaining time, extra time, lock</caption>
+      <image>https://raw.githubusercontent.com/chpusch/tuxsitter/main/docs/screenshots/today-de.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Schedule: school days, weekend, holidays</caption>
+      <image>https://raw.githubusercontent.com/chpusch/tuxsitter/main/docs/screenshots/schedule-de.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Internet: choose a family DNS filter</caption>
+      <image>https://raw.githubusercontent.com/chpusch/tuxsitter/main/docs/screenshots/internet-de.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>History of the last 14 days</caption>
+      <image>https://raw.githubusercontent.com/chpusch/tuxsitter/main/docs/screenshots/history-de.png</image>
+    </screenshot>
+  </screenshots>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.4.2" date="2026-11-25">
+      <description>
+        <p>Fixes a crash when opening the history on Ubuntu and adds software center information.</p>
+      </description>
+    </release>
+    <release version="0.4.1" date="2026-11-22"/>
+    <release version="0.4.0" date="2026-11-22"/>
+    <release version="0.3.0" date="2026-11-22"/>
+  </releases>
+</component>
