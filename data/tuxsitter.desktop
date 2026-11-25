@@ -11,6 +11,7 @@ Comment[fr]=Temps d'écran, horaires et filtre internet pour les comptes d'enfan
 Comment[es]=Tiempo de pantalla, horario y filtro de internet para cuentas infantiles
 Exec=tuxsitter
 Icon=tuxsitter
+StartupWMClass=tuxsitter
 Terminal=false
 Categories=Settings;System;Security;
 Keywords=parental;controls;screen time;kids;children;dns;filter;Kindersicherung;Jugendschutz;Bildschirmzeit;contrôle parental;control parental;

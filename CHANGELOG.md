@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.3 - 2026-11-25
+
+- **Fixed: no icon in the Ubuntu dock** (only a generic placeholder) while the parent app is open.
+  The window was called `gui.py`, so the dock could not match it to the Tuxsitter menu entry.
+
 ## 0.4.2 - 2026-11-25
 
 - **Fixed: crash when opening the history on Ubuntu** ("Couldn't find foreign struct converter

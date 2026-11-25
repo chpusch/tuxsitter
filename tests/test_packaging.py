@@ -34,6 +34,12 @@ class PackagingTests(unittest.TestCase):
         self.assertEqual(root.findtext("project_license"), "GPL-3.0-or-later")
         self.assertEqual(root.findtext("launchable"), "tuxsitter.desktop")
 
+    def test_window_matches_desktop_file(self):
+        """Docks match a window to its .desktop file by app ID / WM_CLASS (the program name)."""
+        gui = read(os.path.join(helpers.ROOT, "src", "tuxsitter", "gui.py"))
+        prg = gui.index('GLib.set_prgname("tuxsitter")')
+        self.assertLess(prg, gui.index("import Gtk"), "set_prgname must come before Gtk is loaded")
+        self.assertIn("StartupWMClass=tuxsitter\n", read(os.path.join(helpers.ROOT, "data", "tuxsitter.desktop")))
 
 if __name__ == "__main__":
     unittest.main()

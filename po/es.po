@@ -137,7 +137,7 @@ msgid "{h} h {m} min"
 msgstr "{h} h {m} min"
 
 #: src/tuxsitter/common.py:236
-#: src/tuxsitter/gui.py:738
+#: src/tuxsitter/gui.py:743
 #, python-brace-format
 msgid "{h} h"
 msgstr "{h} h"
@@ -147,185 +147,185 @@ msgstr "{h} h"
 msgid "today from {time}"
 msgstr "hoy a partir de las {time}"
 
-#: src/tuxsitter/gui.py:26
+#: src/tuxsitter/gui.py:31
 msgid "Mon"
 msgstr "lun"
 
-#: src/tuxsitter/gui.py:26
+#: src/tuxsitter/gui.py:31
 msgid "Tue"
 msgstr "mar"
 
-#: src/tuxsitter/gui.py:26
+#: src/tuxsitter/gui.py:31
 msgid "Wed"
 msgstr "mié"
 
-#: src/tuxsitter/gui.py:26
+#: src/tuxsitter/gui.py:31
 msgid "Thu"
 msgstr "jue"
 
-#: src/tuxsitter/gui.py:26
+#: src/tuxsitter/gui.py:31
 msgid "Fri"
 msgstr "vie"
 
-#: src/tuxsitter/gui.py:26
+#: src/tuxsitter/gui.py:31
 msgid "Sat"
 msgstr "sáb"
 
-#: src/tuxsitter/gui.py:26
+#: src/tuxsitter/gui.py:31
 msgid "Sun"
 msgstr "dom"
 
-#: src/tuxsitter/gui.py:139
-#: src/tuxsitter/gui.py:232
-#: src/tuxsitter/gui.py:189
+#: src/tuxsitter/gui.py:144
+#: src/tuxsitter/gui.py:237
+#: src/tuxsitter/gui.py:194
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/tuxsitter/gui.py:166
+#: src/tuxsitter/gui.py:171
 msgid "Link copied"
 msgstr "Enlace copiado"
 
-#: src/tuxsitter/gui.py:196
+#: src/tuxsitter/gui.py:201
 msgid "With the parent PIN you can grant extra time right on your child's computer - without logging in. Your child should not know it."
 msgstr "Con el PIN parental puedes conceder tiempo extra directamente en el ordenador de tu hijo, sin iniciar sesión. Tu hijo no debería conocerlo."
 
-#: src/tuxsitter/gui.py:140
+#: src/tuxsitter/gui.py:145
 msgid "OK"
 msgstr "Aceptar"
 
-#: src/tuxsitter/gui.py:190
+#: src/tuxsitter/gui.py:195
 msgid "Save"
 msgstr "Guardar"
 
-#: src/tuxsitter/gui.py:233
+#: src/tuxsitter/gui.py:238
 msgid "Add"
 msgstr "Añadir"
 
-#: src/tuxsitter/gui.py:240
+#: src/tuxsitter/gui.py:245
 msgid "Use an existing account"
 msgstr "Usar una cuenta existente"
 
-#: src/tuxsitter/gui.py:241
+#: src/tuxsitter/gui.py:246
 msgid "Create a new account for my child"
 msgstr "Crear una cuenta nueva para mi hijo"
 
-#: src/tuxsitter/gui.py:446
-#: src/tuxsitter/gui.py:453
-#: src/tuxsitter/gui.py:1159
+#: src/tuxsitter/gui.py:451
+#: src/tuxsitter/gui.py:458
+#: src/tuxsitter/gui.py:1164
 msgid "Start service"
 msgstr "Iniciar servicio"
 
-#: src/tuxsitter/gui.py:460
+#: src/tuxsitter/gui.py:465
 msgid "Download"
 msgstr "Descargar"
 
-#: src/tuxsitter/gui.py:587
-#: src/tuxsitter/gui.py:1074
+#: src/tuxsitter/gui.py:592
+#: src/tuxsitter/gui.py:1079
 msgid "Remove rights"
 msgstr "Quitar permisos"
 
-#: src/tuxsitter/gui.py:669
-#: src/tuxsitter/gui.py:1001
+#: src/tuxsitter/gui.py:674
+#: src/tuxsitter/gui.py:1006
 msgid "Locked today"
 msgstr "Bloqueado hoy"
 
-#: src/tuxsitter/gui.py:694
+#: src/tuxsitter/gui.py:699
 msgid "Logged in right now"
 msgstr "Conectado ahora"
 
-#: src/tuxsitter/gui.py:694
+#: src/tuxsitter/gui.py:699
 msgid "Not logged in"
 msgstr "No conectado"
 
-#: src/tuxsitter/gui.py:730
+#: src/tuxsitter/gui.py:735
 msgid "Limit screen time per day"
 msgstr "Limitar el tiempo de pantalla diario"
 
-#: src/tuxsitter/gui.py:894
+#: src/tuxsitter/gui.py:899
 msgid "Please enter your NextDNS profile ID (my.nextdns.io → Setup). Without a valid ID your child has no internet."
 msgstr "Introduce el ID de tu perfil de NextDNS (my.nextdns.io → Configuración). Sin un ID válido tu hijo no tendrá internet."
 
-#: src/tuxsitter/gui.py:915
+#: src/tuxsitter/gui.py:920
 msgid "Testing…"
 msgstr "Probando…"
 
-#: src/tuxsitter/gui.py:946
+#: src/tuxsitter/gui.py:951
 msgid "Saving…"
 msgstr "Guardando…"
 
-#: src/tuxsitter/gui.py:166
+#: src/tuxsitter/gui.py:171
 msgid "Open this address in your browser:"
 msgstr "Abre esta dirección en tu navegador:"
 
-#: src/tuxsitter/gui.py:187
+#: src/tuxsitter/gui.py:192
 #: src/tuxsitter/tray.py:90
 msgid "Parent PIN"
 msgstr "PIN parental"
 
-#: src/tuxsitter/gui.py:189
+#: src/tuxsitter/gui.py:194
 msgid "Later"
 msgstr "Más tarde"
 
-#: src/tuxsitter/gui.py:201
+#: src/tuxsitter/gui.py:206
 msgid "New PIN (4-8 digits)"
 msgstr "PIN nuevo (4-8 dígitos)"
 
-#: src/tuxsitter/gui.py:203
+#: src/tuxsitter/gui.py:208
 msgid "Repeat PIN"
 msgstr "Repetir PIN"
 
-#: src/tuxsitter/gui.py:217
+#: src/tuxsitter/gui.py:222
 msgid "Please use 4 to 8 digits."
 msgstr "Usa de 4 a 8 dígitos."
 
-#: src/tuxsitter/gui.py:230
-#: src/tuxsitter/gui.py:478
-#: src/tuxsitter/gui.py:513
+#: src/tuxsitter/gui.py:235
+#: src/tuxsitter/gui.py:483
+#: src/tuxsitter/gui.py:518
 msgid "Add child"
 msgstr "Añadir niño"
 
-#: src/tuxsitter/gui.py:251
+#: src/tuxsitter/gui.py:256
 msgid "e.g. Emma"
 msgstr "p. ej. Emma"
 
-#: src/tuxsitter/gui.py:253
-#: src/tuxsitter/gui.py:256
+#: src/tuxsitter/gui.py:258
+#: src/tuxsitter/gui.py:261
 msgid "Password"
 msgstr "Contraseña"
 
-#: src/tuxsitter/gui.py:254
+#: src/tuxsitter/gui.py:259
 msgid "Repeat password"
 msgstr "Repetir contraseña"
 
-#: src/tuxsitter/gui.py:316
+#: src/tuxsitter/gui.py:321
 msgid "This account has administrator rights and could switch the protection off. You can remove those rights right afterwards."
 msgstr "Esta cuenta tiene permisos de administrador y podría desactivar la protección. Puedes quitar esos permisos justo después."
 
-#: src/tuxsitter/gui.py:428
+#: src/tuxsitter/gui.py:433
 msgid "Change parent PIN…"
 msgstr "Cambiar PIN parental…"
 
-#: src/tuxsitter/gui.py:429
+#: src/tuxsitter/gui.py:434
 msgid "About Tuxsitter"
 msgstr "Acerca de Tuxsitter"
 
-#: src/tuxsitter/gui.py:434
+#: src/tuxsitter/gui.py:439
 msgid "Check for updates"
 msgstr "Buscar actualizaciones"
 
-#: src/tuxsitter/gui.py:445
+#: src/tuxsitter/gui.py:450
 msgid "The Tuxsitter service is not running - protection is currently off."
 msgstr "El servicio Tuxsitter no se está ejecutando: la protección está desactivada."
 
-#: src/tuxsitter/gui.py:452
+#: src/tuxsitter/gui.py:457
 msgid "The internet filter service is not running - children with the filter have no internet right now."
 msgstr "El servicio de filtro de internet no se está ejecutando: los niños con filtro no tienen internet ahora mismo."
 
-#: src/tuxsitter/gui.py:509
+#: src/tuxsitter/gui.py:514
 msgid "No child set up yet"
 msgstr "Aún no hay ningún niño configurado"
 
-#: src/tuxsitter/gui.py:510
+#: src/tuxsitter/gui.py:515
 msgid ""
 "Choose your child's user account or create a new one.\n"
 "Then set screen time, allowed hours and the internet filter."
@@ -333,367 +333,367 @@ msgstr ""
 "Elige la cuenta de usuario de tu hijo o crea una nueva.\n"
 "Después ajusta el tiempo de pantalla, el horario permitido y el filtro de internet."
 
-#: src/tuxsitter/gui.py:580
+#: src/tuxsitter/gui.py:585
 msgid "Protection on"
 msgstr "Protección activa"
 
-#: src/tuxsitter/gui.py:586
+#: src/tuxsitter/gui.py:591
 msgid "This account has administrator rights and could switch the protection off."
 msgstr "Esta cuenta tiene permisos de administrador y podría desactivar la protección."
 
-#: src/tuxsitter/gui.py:596
+#: src/tuxsitter/gui.py:601
 msgid "Today"
 msgstr "Hoy"
 
-#: src/tuxsitter/gui.py:597
+#: src/tuxsitter/gui.py:602
 msgid "Schedule"
 msgstr "Horario"
 
-#: src/tuxsitter/gui.py:598
+#: src/tuxsitter/gui.py:603
 msgid "Internet"
 msgstr "Internet"
 
-#: src/tuxsitter/gui.py:599
+#: src/tuxsitter/gui.py:604
 msgid "History"
 msgstr "Historial"
 
-#: src/tuxsitter/gui.py:623
+#: src/tuxsitter/gui.py:628
 msgid "More time for today"
 msgstr "Más tiempo para hoy"
 
-#: src/tuxsitter/gui.py:630
+#: src/tuxsitter/gui.py:635
 msgid "Also works outside the allowed hours. Your child can also unlock extra time on their computer with your parent PIN."
 msgstr "También funciona fuera del horario permitido. Tu hijo también puede desbloquear tiempo extra en su ordenador con tu PIN parental."
 
-#: src/tuxsitter/gui.py:634
+#: src/tuxsitter/gui.py:639
 msgid "Lock"
 msgstr "Bloquear"
 
-#: src/tuxsitter/gui.py:639
+#: src/tuxsitter/gui.py:644
 msgid "Lock for today"
 msgstr "Bloquear por hoy"
 
-#: src/tuxsitter/gui.py:640
+#: src/tuxsitter/gui.py:645
 msgid "Logs your child out after one minute. Tomorrow everything is back to normal."
 msgstr "Cierra la sesión de tu hijo tras un minuto. Mañana todo vuelve a la normalidad."
 
-#: src/tuxsitter/gui.py:641
-#: src/tuxsitter/gui.py:644
+#: src/tuxsitter/gui.py:646
+#: src/tuxsitter/gui.py:649
 msgid "Reset"
 msgstr "Restablecer"
 
-#: src/tuxsitter/gui.py:645
+#: src/tuxsitter/gui.py:650
 msgid "Reset today's time"
 msgstr "Restablecer el tiempo de hoy"
 
-#: src/tuxsitter/gui.py:648
+#: src/tuxsitter/gui.py:653
 msgid "Remove child from Tuxsitter"
 msgstr "Quitar al niño de Tuxsitter"
 
-#: src/tuxsitter/gui.py:671
-#: src/tuxsitter/gui.py:1003
+#: src/tuxsitter/gui.py:676
+#: src/tuxsitter/gui.py:1008
 msgid "Unlimited"
 msgstr "Ilimitado"
 
-#: src/tuxsitter/gui.py:680
+#: src/tuxsitter/gui.py:685
 msgid "Daily limit - only counts while your child is logged in."
 msgstr "Límite diario: solo cuenta mientras tu hijo tiene la sesión iniciada."
 
-#: src/tuxsitter/gui.py:691
+#: src/tuxsitter/gui.py:696
 msgid "holiday mode"
 msgstr "modo vacaciones"
 
-#: src/tuxsitter/gui.py:719
+#: src/tuxsitter/gui.py:724
 msgid "Holiday mode"
 msgstr "Modo vacaciones"
 
-#: src/tuxsitter/gui.py:719
+#: src/tuxsitter/gui.py:724
 msgid "During school holidays the weekend rules apply every day."
 msgstr "Durante las vacaciones escolares se aplican todos los días las reglas del fin de semana."
 
-#: src/tuxsitter/gui.py:721
+#: src/tuxsitter/gui.py:726
 msgid "School days (Monday to Friday)"
 msgstr "Días de colegio (lunes a viernes)"
 
-#: src/tuxsitter/gui.py:721
+#: src/tuxsitter/gui.py:726
 msgid "Weekend (Saturday and Sunday)"
 msgstr "Fin de semana (sábado y domingo)"
 
-#: src/tuxsitter/gui.py:760
+#: src/tuxsitter/gui.py:765
 msgid "Only at certain times"
 msgstr "Solo a ciertas horas"
 
-#: src/tuxsitter/gui.py:770
+#: src/tuxsitter/gui.py:775
 msgid "from"
 msgstr "de"
 
-#: src/tuxsitter/gui.py:772
+#: src/tuxsitter/gui.py:777
 msgid "to"
 msgstr "a"
 
-#: src/tuxsitter/gui.py:801
+#: src/tuxsitter/gui.py:806
 msgid "Internet filter on"
 msgstr "Filtro de internet activo"
 
-#: src/tuxsitter/gui.py:802
+#: src/tuxsitter/gui.py:807
 msgid "Applies to this account only. Your own accounts stay unfiltered."
 msgstr "Solo se aplica a esta cuenta. Tus propias cuentas no se filtran."
 
-#: src/tuxsitter/gui.py:807
+#: src/tuxsitter/gui.py:812
 msgid "Filter provider"
 msgstr "Proveedor de filtro"
 
-#: src/tuxsitter/gui.py:810
+#: src/tuxsitter/gui.py:815
 msgid "Profile ID (6 characters)"
 msgstr "ID de perfil (6 caracteres)"
 
-#: src/tuxsitter/gui.py:812
+#: src/tuxsitter/gui.py:817
 msgid "e.g. 192.168.1.2"
 msgstr "p. ej. 192.168.1.2"
 
-#: src/tuxsitter/gui.py:837
+#: src/tuxsitter/gui.py:842
 msgid "Test connection"
 msgstr "Probar conexión"
 
-#: src/tuxsitter/gui.py:850
+#: src/tuxsitter/gui.py:855
 msgid "Extra protection"
 msgstr "Protección adicional"
 
-#: src/tuxsitter/gui.py:854
+#: src/tuxsitter/gui.py:859
 msgid "Enforce SafeSearch"
 msgstr "Forzar SafeSearch"
 
-#: src/tuxsitter/gui.py:854
+#: src/tuxsitter/gui.py:859
 msgid "Google, Bing and DuckDuckGo only show family-friendly results."
 msgstr "Google, Bing y DuckDuckGo solo muestran resultados aptos para niños."
 
-#: src/tuxsitter/gui.py:856
+#: src/tuxsitter/gui.py:861
 msgid "No restriction"
 msgstr "Sin restricción"
 
-#: src/tuxsitter/gui.py:856
+#: src/tuxsitter/gui.py:861
 msgid "Restricted"
 msgstr "Restringido"
 
-#: src/tuxsitter/gui.py:856
+#: src/tuxsitter/gui.py:861
 msgid "Strict"
 msgstr "Estricto"
 
-#: src/tuxsitter/gui.py:860
+#: src/tuxsitter/gui.py:865
 msgid "Restricted Mode hides videos that are not suitable for children."
 msgstr "El modo restringido oculta los vídeos no aptos para niños."
 
-#: src/tuxsitter/gui.py:863
+#: src/tuxsitter/gui.py:868
 msgid "Block workarounds"
 msgstr "Bloquear métodos de evasión"
 
-#: src/tuxsitter/gui.py:864
+#: src/tuxsitter/gui.py:869
 msgid "Blocks known third-party DNS services. Unknown services and VPNs are only recognised by a strict filter such as CleanBrowsing or OpenDNS."
 msgstr "Bloquea los servicios DNS de terceros conocidos. Solo un filtro estricto como CleanBrowsing u OpenDNS reconoce servicios desconocidos y VPN."
 
-#: src/tuxsitter/gui.py:868
+#: src/tuxsitter/gui.py:873
 msgid "Lock DNS settings in browsers"
 msgstr "Bloquear la configuración DNS de los navegadores"
 
-#: src/tuxsitter/gui.py:869
+#: src/tuxsitter/gui.py:874
 msgid "Firefox, Chrome, Chromium, Brave, Edge and Vivaldi can no longer use their own DNS. Applies to all accounts on this computer - for you nothing changes in practice."
 msgstr "Firefox, Chrome, Chromium, Brave, Edge y Vivaldi ya no pueden usar su propio DNS. Se aplica a todas las cuentas de este ordenador; para ti, en la práctica, no cambia nada."
 
-#: src/tuxsitter/gui.py:929
+#: src/tuxsitter/gui.py:934
 msgid "Screen time of the last 14 days"
 msgstr "Tiempo de pantalla de los últimos 14 días"
 
-#: src/tuxsitter/gui.py:965
-#: src/tuxsitter/gui.py:1046
+#: src/tuxsitter/gui.py:970
+#: src/tuxsitter/gui.py:1051
 msgid "Saving failed"
 msgstr "Error al guardar"
 
-#: src/tuxsitter/gui.py:967
-#: src/tuxsitter/gui.py:1043
+#: src/tuxsitter/gui.py:972
+#: src/tuxsitter/gui.py:1048
 msgid "Saved"
 msgstr "Guardado"
 
-#: src/tuxsitter/gui.py:975
-#: src/tuxsitter/gui.py:1061
-#: src/tuxsitter/gui.py:1078
+#: src/tuxsitter/gui.py:980
+#: src/tuxsitter/gui.py:1066
+#: src/tuxsitter/gui.py:1083
 msgid "Error"
 msgstr "Error"
 
-#: src/tuxsitter/gui.py:997
+#: src/tuxsitter/gui.py:1002
 msgid "Paused"
 msgstr "En pausa"
 
-#: src/tuxsitter/gui.py:1070
+#: src/tuxsitter/gui.py:1075
 msgid "Not possible"
 msgstr "No es posible"
 
-#: src/tuxsitter/gui.py:1070
+#: src/tuxsitter/gui.py:1075
 msgid "This is your own account."
 msgstr "Esta es tu propia cuenta."
 
-#: src/tuxsitter/gui.py:1072
+#: src/tuxsitter/gui.py:1077
 msgid "Remove administrator rights?"
 msgstr "¿Quitar permisos de administrador?"
 
-#: src/tuxsitter/gui.py:1083
+#: src/tuxsitter/gui.py:1088
 msgid "Time limits and the internet filter will no longer apply. The user account itself is kept."
 msgstr "Los límites de tiempo y el filtro de internet dejarán de aplicarse. La cuenta de usuario se conserva."
 
-#: src/tuxsitter/gui.py:1084
+#: src/tuxsitter/gui.py:1089
 msgid "Remove"
 msgstr "Quitar"
 
-#: src/tuxsitter/gui.py:1129
+#: src/tuxsitter/gui.py:1134
 msgid "Screen time, allowed hours and an internet filter for children's accounts on Linux."
 msgstr "Tiempo de pantalla, horario permitido y filtro de internet para cuentas infantiles en Linux."
 
-#: src/tuxsitter/gui.py:1215
+#: src/tuxsitter/gui.py:1220
 msgid "Unexpected error"
 msgstr "Error inesperado"
 
-#: src/tuxsitter/gui.py:219
+#: src/tuxsitter/gui.py:224
 msgid "The PINs do not match."
 msgstr "Los PIN no coinciden."
 
-#: src/tuxsitter/gui.py:245
+#: src/tuxsitter/gui.py:250
 msgid "administrator!"
 msgstr "¡administrador!"
 
-#: src/tuxsitter/gui.py:255
+#: src/tuxsitter/gui.py:260
 msgid "Name"
 msgstr "Nombre"
 
-#: src/tuxsitter/gui.py:255
+#: src/tuxsitter/gui.py:260
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: src/tuxsitter/gui.py:476
+#: src/tuxsitter/gui.py:481
 msgid "Children"
 msgstr "Niños"
 
-#: src/tuxsitter/gui.py:662
+#: src/tuxsitter/gui.py:667
 msgid "Protection is paused."
 msgstr "La protección está en pausa."
 
-#: src/tuxsitter/gui.py:663
+#: src/tuxsitter/gui.py:668
 msgid "No data from the service."
 msgstr "No hay datos del servicio."
 
-#: src/tuxsitter/gui.py:678
+#: src/tuxsitter/gui.py:683
 #, python-brace-format
 msgid "Allowed time ends at {time}."
 msgstr "El horario permitido termina a las {time}."
 
-#: src/tuxsitter/gui.py:685
+#: src/tuxsitter/gui.py:690
 #, python-brace-format
 msgid "Used today: {used} of {limit}"
 msgstr "Usado hoy: {used} de {limit}"
 
-#: src/tuxsitter/gui.py:687
+#: src/tuxsitter/gui.py:692
 #, python-brace-format
 msgid "Used today: {used}"
 msgstr "Usado hoy: {used}"
 
-#: src/tuxsitter/gui.py:696
+#: src/tuxsitter/gui.py:701
 #, python-brace-format
 msgid "Will be logged out in {s} s"
 msgstr "Se cerrará la sesión en {s} s"
 
-#: src/tuxsitter/gui.py:748
+#: src/tuxsitter/gui.py:753
 msgid "no time"
 msgstr "sin tiempo"
 
-#: src/tuxsitter/gui.py:780
+#: src/tuxsitter/gui.py:785
 msgid "End must be after start"
 msgstr "El final debe ser posterior al inicio"
 
-#: src/tuxsitter/gui.py:1107
+#: src/tuxsitter/gui.py:1112
 #, python-brace-format
 msgid "Tuxsitter {version} is available (installed: {installed})."
 msgstr "Tuxsitter {version} está disponible (instalado: {installed})."
 
-#: src/tuxsitter/gui.py:1158
+#: src/tuxsitter/gui.py:1163
 msgid "The Tuxsitter service is not running"
 msgstr "El servicio Tuxsitter no se está ejecutando"
 
-#: src/tuxsitter/gui.py:1159
+#: src/tuxsitter/gui.py:1164
 msgid "Start it now? Your password will be requested."
 msgstr "¿Iniciarlo ahora? Se te pedirá la contraseña."
 
-#: src/tuxsitter/gui.py:305
+#: src/tuxsitter/gui.py:310
 msgid "Username: lowercase letters and digits only."
 msgstr "Nombre de usuario: solo minúsculas y números."
 
-#: src/tuxsitter/gui.py:307
+#: src/tuxsitter/gui.py:312
 msgid "This username already exists."
 msgstr "Este nombre de usuario ya existe."
 
-#: src/tuxsitter/gui.py:642
+#: src/tuxsitter/gui.py:647
 msgid "Reset today?"
 msgstr "¿Restablecer hoy?"
 
-#: src/tuxsitter/gui.py:643
+#: src/tuxsitter/gui.py:648
 msgid "Today's used time and extra time are set back to zero."
 msgstr "El tiempo usado y el tiempo extra de hoy vuelven a cero."
 
-#: src/tuxsitter/gui.py:673
+#: src/tuxsitter/gui.py:678
 msgid "Time used up"
 msgstr "Tiempo agotado"
 
-#: src/tuxsitter/gui.py:673
+#: src/tuxsitter/gui.py:678
 msgid "Not allowed right now"
 msgstr "No permitido ahora"
 
-#: src/tuxsitter/gui.py:689
+#: src/tuxsitter/gui.py:694
 #, python-brace-format
 msgid "allowed {start}-{end}"
 msgstr "permitido {start}-{end}"
 
-#: src/tuxsitter/gui.py:904
+#: src/tuxsitter/gui.py:909
 msgid "Please enter a valid IP address. Without it your child has no internet."
 msgstr "Introduce una dirección IP válida. Sin ella tu hijo no tendrá internet."
 
-#: src/tuxsitter/gui.py:1073
+#: src/tuxsitter/gui.py:1078
 #, python-brace-format
 msgid "{name} will no longer be able to install programs or switch off the protection. Takes effect at the next login."
 msgstr "{name} ya no podrá instalar programas ni desactivar la protección. Se aplica en el próximo inicio de sesión."
 
-#: src/tuxsitter/gui.py:1082
+#: src/tuxsitter/gui.py:1087
 #, python-brace-format
 msgid "Remove {name}?"
 msgstr "¿Quitar a {name}?"
 
-#: src/tuxsitter/gui.py:199
+#: src/tuxsitter/gui.py:204
 msgid "Welcome to Tuxsitter!"
 msgstr "¡Bienvenido a Tuxsitter!"
 
-#: src/tuxsitter/gui.py:675
-#: src/tuxsitter/gui.py:1007
+#: src/tuxsitter/gui.py:680
+#: src/tuxsitter/gui.py:1012
 #: src/tuxsitter/tray.py:297
 #, python-brace-format
 msgid "{time} left"
 msgstr "Quedan {time}"
 
-#: src/tuxsitter/gui.py:710
+#: src/tuxsitter/gui.py:715
 #, python-brace-format
 msgid "Average of the last 7 days: {time} per day"
 msgstr "Media de los últimos 7 días: {time} al día"
 
-#: src/tuxsitter/gui.py:1216
+#: src/tuxsitter/gui.py:1221
 #, python-brace-format
 msgid "Please report this at {url} and attach {log}."
 msgstr "Por favor, infórmalo en {url} y adjunta {log}."
 
-#: src/tuxsitter/gui.py:311
+#: src/tuxsitter/gui.py:316
 msgid "The passwords do not match."
 msgstr "Las contraseñas no coinciden."
 
-#: src/tuxsitter/gui.py:921
+#: src/tuxsitter/gui.py:926
 #, python-brace-format
 msgid "Filter answers ({ms} ms)"
 msgstr "El filtro responde ({ms} ms)"
 
-#: src/tuxsitter/gui.py:1005
+#: src/tuxsitter/gui.py:1010
 #: src/tuxsitter/tray.py:258
 msgid "No time left"
 msgstr "Sin tiempo restante"

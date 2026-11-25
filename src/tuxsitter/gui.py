@@ -20,7 +20,12 @@ from i18n import _  # noqa: E402
 
 import gi  # noqa: E402
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, GLib, Gdk, Pango  # noqa: E402
+from gi.repository import GLib  # noqa: E402
+# Must happen before Gtk is loaded: the program name becomes the window's app ID (Wayland) and
+# WM_CLASS (X11). Docks and panels use it to find tuxsitter.desktop and show the right icon -
+# otherwise the window is called "gui.py" and Ubuntu's dock shows a generic icon.
+GLib.set_prgname("tuxsitter")
+from gi.repository import Gtk, Gdk, Pango  # noqa: E402
 
 TIMES = [C.min_to_hm(m) for m in range(0, 24 * 60 + 1, 15)]
 WEEKDAYS = [i18n.N_("Mon"), i18n.N_("Tue"), i18n.N_("Wed"), i18n.N_("Thu"), i18n.N_("Fri"), i18n.N_("Sat"), i18n.N_("Sun")]
