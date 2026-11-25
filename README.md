@@ -70,6 +70,17 @@ Parents get one simple window; the child sees how much time is left in the panel
    ```
 3. Open **Tuxsitter** from the menu. It asks for your password.
 
+**Updating:** Tuxsitter tells you when a new version is out. Download the new `.deb` and run in the
+download folder:
+
+```sh
+sudo apt install ./tuxsitter_*_all.deb
+```
+
+Your settings are kept. Note: the Ubuntu **App Center** cannot update a `.deb` that is already
+installed - it only offers *Remove*. Use the command above instead (on Linux Mint, double-clicking
+the new `.deb` works too).
+
 ### From source
 
 ```sh

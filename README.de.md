@@ -67,6 +67,17 @@ einfaches Fenster, das Kind sieht im Panel, wie viel Zeit noch übrig ist.
    ```
 3. **Tuxsitter** im Startmenü öffnen (fragt nach deinem Passwort).
 
+**Aktualisieren:** Tuxsitter meldet sich, wenn es eine neue Version gibt. Die neue `.deb` herunterladen
+und im Download-Ordner ausführen:
+
+```sh
+sudo apt install ./tuxsitter_*_all.deb
+```
+
+Deine Einstellungen bleiben erhalten. Hinweis: Das **App Center** von Ubuntu kann eine bereits
+installierte `.deb` nicht aktualisieren - es bietet nur *Entfernen* an. Nimm stattdessen den Befehl oben
+(unter Linux Mint klappt auch ein Doppelklick auf die neue `.deb`).
+
 Selbst bauen: `./tools/build-deb.sh` erzeugt `build/tuxsitter_<version>_all.deb`.
 
 ## Einrichtung
